@@ -1,2 +1,1 @@
-# Projeto de SPD
-### ESTamos Juntos
+# Projeto de SPD - ESTamos Juntos
