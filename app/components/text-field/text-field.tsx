@@ -15,12 +15,16 @@ const INPUT: TextStyle = {
   color: color.text,
   minHeight: 44,
   fontSize: 18,
-  backgroundColor: color.palette.white,
+  marginTop: spacing[2],
+  backgroundColor: color.palette.deepPurple,
+  paddingHorizontal: spacing[4],
+  borderRadius: 10
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
 const PRESETS: { [name: string]: ViewStyle } = {
-  default: {},
+  default: {
+  },
 }
 
 export interface TextFieldProps extends TextInputProps {

@@ -8,8 +8,9 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
+import { TabNavigator } from "./tab-navigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,6 +28,8 @@ export type NavigatorParamList = {
   welcome: undefined
   demo: undefined
   demoList: undefined
+  tabs: undefined
+  login: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -38,11 +41,13 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
+      initialRouteName="login"
     >
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} />
+      <Stack.Screen name="tabs" component={TabNavigator} />
+      <Stack.Screen name="login" component={LoginScreen} />
     </Stack.Navigator>
   )
 }
@@ -50,7 +55,7 @@ const AppStack = () => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
-  const colorScheme = useColorScheme()
+  const colorScheme = useColorScheme();
   return (
     <NavigationContainer
       ref={navigationRef}

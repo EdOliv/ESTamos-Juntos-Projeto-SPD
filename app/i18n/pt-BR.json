@@ -1,16 +1,16 @@
 {
   "common": {
     "ok": "OK!",
-    "cancel": "Cancel",
-    "back": "Back"
+    "cancel": "Cancelar",
+    "back": "Voltar"
   },
   "errors": {
-    "invalidEmail": "Invalid email address."
+    "invalidEmail": "Endereço de email inválido."
   },
   "welcomeScreen": {
     "poweredBy": "POWERED BY IGNITE",
     "readyForLaunch": "Ready for launch.",
-    "continue": "CONTINUE"
+    "continue": "CONTINUAR"
   },
   "demoScreen": {
     "howTo": "HOW TO",
