@@ -1,4 +1,7 @@
-# Welcome to your new ignited app!
+
+# Projeto de SPD - ESTamos Juntos
+Projeto da discplina Sistemas Paralelos e Distribuídas do período 2021/01 da Escolar Superior de Tecnologia da Universidade do Estado do Amazonas.
+## Welcome to your new ignited app!
 
 [![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
 
