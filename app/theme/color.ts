@@ -1,4 +1,10 @@
-import { palette } from "./palette"
+const palette = {
+  black: "#1d1d1d",
+  white: "#ffffff",
+  purple: "#7B68EE",
+  lilac: "#EAEAFF",
+  red: "#FF0000",
+}
 
 /**
  * Roles for colors.  Prefer using these over the palette.  It makes it easier
@@ -27,27 +33,31 @@ export const color = {
   /**
    * The main tinting color.
    */
-  primary: palette.orange,
-  /**
-   * The main tinting color, but darker.
-   */
-  primaryDarker: palette.orangeDarker,
+  primary: palette.purple,
   /**
    * A subtle color used for borders and lines.
    */
-  line: palette.offWhite,
+  border: palette.purple,
   /**
    * The default color of text in many components.
    */
-  text: palette.white,
+  text: palette.purple,
   /**
-   * Secondary information.
+   * Button background
    */
-  dim: palette.lightGrey,
+  button: palette.purple,
+  /**
+   * Text in buttons
+   */
+  textButton: palette.white,
   /**
    * Error messages and icons.
    */
-  error: palette.angry,
+  error: palette.red,
+  /**
+   * Input bar and bottom tab bar navigator color.
+   */
+  bar: palette.lilac,
 
   /**
    * Storybook background for Text stories, or any stories where

@@ -46,8 +46,8 @@ const AppStack = () => {
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} />
-      <Stack.Screen name="tabs" component={TabNavigator} />
       <Stack.Screen name="login" component={LoginScreen} />
+      <Stack.Screen name="tabs" component={TabNavigator} />
     </Stack.Navigator>
   )
 }

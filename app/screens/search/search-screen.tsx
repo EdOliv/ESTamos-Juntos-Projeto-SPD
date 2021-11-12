@@ -1,64 +1,149 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ImageStyle, ScrollView } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 
-import { Screen, Text, GradientBackground, TextField } from "../../components"
+import { Text, TextField, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
+import { MaterialIcons as Icons } from "@expo/vector-icons" 
+
 
 const FULL: ViewStyle = { flex: 1 }
+
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: color.transparent,
+  backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  paddingTop: spacing[6]
 }
+
 const TEXT: TextStyle = {
-  color: color.palette.white,
+  color: color.primary,
   fontFamily: typography.primary,
 }
-const BOLD: TextStyle = { fontWeight: "bold" }
+
 const TITLE: TextStyle = {
   ...TEXT,
-  ...BOLD,
+  fontWeight: "bold",
   fontSize: 28,
-  lineHeight: 38,
   textAlign: "center",
+  color: color.textButton,
+  backgroundColor: color.button,
+  paddingVertical: spacing[3],
 }
-const CONTENT: TextStyle = {
+
+const SEARCH_AREA: ViewStyle = {
+  flexDirection: 'row',
+  alignContent: 'center',
+  justifyContent: 'center',
+  paddingBottom: spacing[5],
+  borderBottomColor: color.primary,
+  borderBottomWidth: 2,
+  marginTop: spacing[5],
+}
+
+const SEARCH_BAR: ViewStyle = {
+  flexDirection: 'row',
+  alignContent: 'space-around',
+  backgroundColor: color.bar,
+  borderRadius: 10,
+}
+
+const IMAGE: ImageStyle = {
+  width: 80,
+  height: 80,
+  marginRight: spacing[5],
+  marginLeft: spacing[3],
+}
+
+const GROUP_ITEM: ViewStyle = {
+  flexDirection: "row",
+  marginTop: spacing[5],
+  paddingBottom: spacing[5],
+  borderBottomColor: color.primary,
+  borderBottomWidth: 1,
+}
+
+const GROUP_NAME: TextStyle = {
   ...TEXT,
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
+  fontSize: 20,
+  fontWeight: "bold",
+}
+
+const GROUP_DESTINATION: TextStyle = {
+  ...TEXT,
+  fontSize: 16,
   marginTop: spacing[3],
 }
 
+const GROUP_FOOTER: ViewStyle = {
+  ...TEXT,
+  flexDirection: "row",
+}
+
+const GROUP_FOOTER_TEXT: ViewStyle = {
+  ...TEXT,
+  marginTop: spacing[3],
+  flex: 1,
+}
+
+
 export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "search">> = observer(
-  function SearchScreen() {
+  ({ navigation }) => {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
 
     const [search, setSearch] = useState("")
+  
+    const [groups, setGroups] = useState([])
+  
+    useEffect(() => {
+      setGroups([
+        { id: 1, name: "Grupo #1", destination: "Parada do shopping ABC", time: "08:00", count: 5 },
+        { id: 2, name: "Grupo #2", destination: "Parada do shopping DEF", time: "12:00", count: 5 },
+        { id: 3, name: "Grupo #3", destination: "Parada do shopping GHI", time: "18:00", count: 5 },
+      ]);
+    }, []);
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
     return (
       <View testID="SearchScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
-        <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Text style={TITLE} preset="header" text="Encontrar grupos" />
-          <TextField
-            label="Buscar"
-            value={search}
-            onChangeText={setSearch}
-            returnKeyType="go"
-            blurOnSubmit={false}
-          />
-          <Text style={CONTENT}>Esqueceu sua senha?</Text>
-          <Text style={CONTENT}>É novo por aqui? Registre-se agora!</Text>
-        </Screen>
+
+        <Text style={TITLE} preset="header" text="ESTamos juntos" />
+
+        <ScrollView style={CONTAINER}>
+          <View style={SEARCH_AREA}>
+            <View style={SEARCH_BAR}>
+              <Icons size={35} name='search' color={color.primary} />
+              <TextField
+                value={search}
+                onChangeText={setSearch}
+                returnKeyType="go"
+                blurOnSubmit={false}
+              />
+              <Icons size={35} name='clear' color={color.primary} />
+            </View>
+            <Icons size={35} name='directions-walk' color={color.primary} />
+            <Icons size={35} name='directions-car' color={color.primary} />
+          </View>
+
+          {groups.map((group) => (
+            <View key={group.id} style={GROUP_ITEM}>
+              <Icon icon="bug" style={IMAGE} />
+              <View>
+                <Text style={GROUP_NAME}>{group.name}</Text>
+                <Text style={GROUP_DESTINATION}>{group.destination}</Text>
+                <View style={GROUP_FOOTER}>
+                  <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
+                  <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+                </View>
+              </View>
+            </View>
+          ))}
+
+        </ScrollView>
       </View>
     )
   },

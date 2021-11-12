@@ -1,79 +1,75 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, SafeAreaView, ImageStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import { Button, Screen, Text, GradientBackground, Icon } from "../../components"
+import { Text, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 
+
 const FULL: ViewStyle = { flex: 1 }
+
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: color.transparent,
+  backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  paddingTop: spacing[6],
 }
+
 const TEXT: TextStyle = {
-  color: color.palette.white,
+  color: color.primary,
   fontFamily: typography.primary,
 }
-const BOLD: TextStyle = { fontWeight: "bold" }
+
 const TITLE: TextStyle = {
   ...TEXT,
-  ...BOLD,
+  fontWeight: "bold",
   fontSize: 28,
-  lineHeight: 38,
   textAlign: "center",
+  color: color.textButton,
+  backgroundColor: color.button,
+  paddingVertical: spacing[3],
 }
-const CONTENT: TextStyle = {
-  ...TEXT,
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
-  marginTop: spacing[3],
+
+const IMAGE: ImageStyle = {
+  width: 80,
+  height: 80,
+  marginRight: spacing[5],
+  marginLeft: spacing[3],
 }
+
 const GROUP_ITEM: ViewStyle = {
   flexDirection: "row",
   marginTop: spacing[5],
   paddingBottom: spacing[5],
-  borderBottomColor: color.palette.lightGrey,
+  borderBottomColor: color.primary,
   borderBottomWidth: 1,
 }
+
 const GROUP_NAME: TextStyle = {
   ...TEXT,
-  ...BOLD,
   fontSize: 20,
-  lineHeight: 30,
+  fontWeight: "bold",
 }
+
 const GROUP_DESTINATION: TextStyle = {
-  ...CONTENT,
+  ...TEXT,
+  fontSize: 16,
+  marginTop: spacing[3],
 }
+
 const GROUP_FOOTER: ViewStyle = {
+  ...TEXT,
   flexDirection: "row",
 }
+
 const GROUP_FOOTER_TEXT: ViewStyle = {
-  ...CONTENT,
+  ...TEXT,
+  marginTop: spacing[3],
   flex: 1,
 }
-const IMAGE: ImageStyle = { width: 80, height: 80, marginRight: spacing[2] }
-const CONTINUE: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: color.palette.deepPurple,
-}
-const CONTINUE_TEXT: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 13,
-  letterSpacing: 2,
-}
-const FOOTER: ViewStyle = { backgroundColor: "#20162D" }
-const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-}
+
 
 export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">> = observer(
   ({ navigation }) => {
@@ -90,17 +86,14 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
       ]);
     }, []);
 
-    const back = () => {
-      console.log("GROUPS")
-      navigation.goBack()
-    }
 
     // Pull in navigation via hook
     return (
       <View testID="LoginScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
-        <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Text style={TITLE} preset="header" text="Seus grupos" />
+        
+        <Text style={TITLE} preset="header" text="Seus grupos" />
+        
+        <ScrollView style={CONTAINER}>
           {groups.map((group) => (
             <View key={group.id} style={GROUP_ITEM}>
               <Icon icon="bug" style={IMAGE} />
@@ -114,20 +107,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
               </View>
             </View>
           ))}
-        </Screen>
-        <SafeAreaView style={FOOTER}>
-          <View style={FOOTER_CONTENT}>
-            <Button
-              testID="next-screen-button"
-              style={CONTINUE}
-              textStyle={CONTINUE_TEXT}
-              text="VOLTAR"
-              onPress={() => {
-                back()
-              }}
-            />
-          </View>
-        </SafeAreaView>
+        </ScrollView>
       </View>
     )
   },

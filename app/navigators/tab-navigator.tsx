@@ -6,7 +6,7 @@
  */
 import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { Ionicons } from "@expo/vector-icons"
+import { MaterialCommunityIcons as Icons } from "@expo/vector-icons" 
 import { SearchScreen, GroupsScreen, ProfileScreen } from "../screens"
 import { color } from "../theme"
 
@@ -30,24 +30,29 @@ export type TabNavigatorParamList = {
 
 const Tab = createBottomTabNavigator<TabNavigatorParamList>()
 
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>["name"]; color: string }) {
+function TabBarIcon(props: { name: React.ComponentProps<typeof Icons>["name"]; color: string }) {
   const iconStyle = { marginBottom: -3 }
-  return <Ionicons size={27} style={iconStyle} {...props} />
+  return <Icons size={35} style={iconStyle} {...props} />
 }
 
 export const TabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="groups"
-      screenOptions={{ headerShown: false, tabBarActiveTintColor: color.primary }}
+      initialRouteName="search"
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: color.primary,
+        tabBarInactiveTintColor: color.primary,
+        tabBarInactiveBackgroundColor: color.bar,
+        tabBarActiveBackgroundColor: color.bar, }}
     >
       <Tab.Screen
         name="search"
         component={SearchScreen}
         options={{
-          tabBarLabel: "Buscar",
+          tabBarLabel: "",
           tabBarIcon: function tbIcon({ color, focused }) {
-            return <TabBarIcon name={focused ? "ios-search" : "ios-search-outline"} color={color} />
+            return <TabBarIcon name={focused ? "home-search" : "home-search-outline"} color={color} />
           },
         }}
       />
@@ -55,9 +60,9 @@ export const TabNavigator = () => {
         name="groups"
         component={GroupsScreen}
         options={{
-          tabBarLabel: "Grupos",
+          tabBarLabel: "",
           tabBarIcon: function tabBarIcon({ color, focused }) {
-            return <TabBarIcon name={focused ? "ios-home" : "ios-home-outline"} color={color} />
+            return <TabBarIcon name={focused ? "account-group" : "account-group-outline"} color={color} />
           },
         }}
       />
@@ -65,9 +70,9 @@ export const TabNavigator = () => {
         name="profile"
         component={ProfileScreen}
         options={{
-          tabBarLabel: "Perfil",
+          tabBarLabel: "",
           tabBarIcon: function tabBarIcon({ color, focused }) {
-            return <TabBarIcon name={focused ? "ios-person" : "ios-person-outline"} color={color} />
+            return <TabBarIcon name={focused ? "account" : "account-outline"} color={color} />
           },
         }}
       />

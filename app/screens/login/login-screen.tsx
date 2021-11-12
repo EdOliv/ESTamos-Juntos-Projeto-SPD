@@ -1,13 +1,11 @@
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
+import { View, ViewStyle, TextStyle, ImageStyle, ScrollView } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import {
   Button,
-  Screen,
   Text,
-  GradientBackground,
   AutoImage as Image,
   TextField,
 } from "../../components"
@@ -15,49 +13,60 @@ import {
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 
-const logoIgnite = require("./logo-ignite.png")
+const logo = require("./logo.png")
 
-const FULL: ViewStyle = { flex: 1 }
-const CONTAINER: ViewStyle = {
+const FULL: ViewStyle = {
   flex: 1,
-  backgroundColor: color.transparent,
+  backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  justifyContent: "center",
+  alignContent: 'stretch'
 }
+
+const CONTAINER: ViewStyle = {
+  justifyContent: 'center',
+  alignContent: 'stretch',
+  paddingBottom: spacing[2],
+}
+
 const TEXT: TextStyle = {
-  color: color.palette.white,
+  color: color.text,
   fontFamily: typography.primary,
 }
-const BOLD: TextStyle = { fontWeight: "bold" }
-const IGNITE: ImageStyle = {
-  marginVertical: spacing[6],
+
+const LOGO: ImageStyle = {
+  marginVertical: spacing[3],
   alignSelf: "center",
-  width: 180,
-  height: 100,
 }
-const CONTENT: TextStyle = {
+
+const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
-  marginTop: spacing[3],
+  fontSize: 18,
+  fontWeight: "bold",
+  marginTop: spacing[5],
 }
-const CONTINUE: ViewStyle = {
+
+const ENTER: ViewStyle = {
   paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: color.palette.deepPurple,
+  backgroundColor: color.button,
+  marginVertical: spacing[6],
 }
-const CONTINUE_TEXT: TextStyle = {
+
+const ENTER_TEXT: TextStyle = {
   ...TEXT,
-  ...BOLD,
-  fontSize: 13,
+  color: color.textButton,
+  fontWeight: "bold",
+  fontSize: 15,
   letterSpacing: 2,
 }
-const FOOTER: ViewStyle = { backgroundColor: "#20162D" }
-const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
+
+const FOOTER_TEXT: TextStyle = {
+  ...TEXT,
+  fontSize: 15,
+  marginVertical: spacing[2],
+  alignSelf: "center",
+  textDecorationLine: 'underline',
 }
+
 
 export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
   ({ navigation }) => {
@@ -76,20 +85,19 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
 
     // Pull in navigation via hook
     return (
-      <View testID="LoginScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
-        <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Image source={logoIgnite} style={IGNITE} />
+      <ScrollView testID="LoginScreen" style={FULL}>
+        <View style={CONTAINER}>
+          <Image source={logo} style={LOGO} />
+          <Text style={FIELD_TITLE}>E-mail</Text>
           <TextField
-            label="Email ou telefone"
             value={email}
             onChangeText={setEmail}
             returnKeyType="next"
             onSubmitEditing={() => { passwordTextInput.current.focus(); }}
             blurOnSubmit={false}
           />
+          <Text style={FIELD_TITLE}>Senha</Text>
           <TextField
-            label="Senha"
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -97,23 +105,19 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             onSubmitEditing={login}
             forwardedRef={passwordTextInput}
           />
-          <Text style={CONTENT}>Esqueceu sua senha?</Text>
-          <Text style={CONTENT}>É novo por aqui? Registre-se agora!</Text>
-        </Screen>
-        <SafeAreaView style={FOOTER}>
-          <View style={FOOTER_CONTENT}>
-            <Button
-              testID="next-screen-button"
-              style={CONTINUE}
-              textStyle={CONTINUE_TEXT}
-              text="ENTRAR"
-              onPress={() => {
-                login()
-              }}
-            />
-          </View>
-        </SafeAreaView>
-      </View>
+          <Button
+            testID="next-screen-button"
+            style={ENTER}
+            textStyle={ENTER_TEXT}
+            text="ENTRAR"
+            onPress={() => {
+              login()
+            }}
+          />
+          <Text style={FOOTER_TEXT}>Esqueceu sua senha?</Text>
+          <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>
+        </View>
+      </ScrollView>
     )
   },
 )
