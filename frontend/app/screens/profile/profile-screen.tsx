@@ -14,7 +14,10 @@ import {
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 
-const FULL: ViewStyle = { flex: 1 }
+const FULL: ViewStyle = {
+  flex: 1,
+  paddingTop: spacing[7],
+}
 
 const CONTAINER: ViewStyle = {
   flex: 1,

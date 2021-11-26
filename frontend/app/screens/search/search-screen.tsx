@@ -10,7 +10,10 @@ import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons" 
 
 
-const FULL: ViewStyle = { flex: 1 }
+const FULL: ViewStyle = {
+  flex: 1,
+  paddingTop: spacing[7],
+}
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -34,9 +37,8 @@ const TITLE: TextStyle = {
 }
 
 const SEARCH_AREA: ViewStyle = {
-  flexDirection: 'row',
-  alignContent: 'center',
-  justifyContent: 'center',
+  alignContent: 'stretch',
+  justifyContent: 'flex-end',
   paddingBottom: spacing[5],
   borderBottomColor: color.primary,
   borderBottomWidth: 2,
@@ -45,9 +47,14 @@ const SEARCH_AREA: ViewStyle = {
 
 const SEARCH_BAR: ViewStyle = {
   flexDirection: 'row',
-  alignContent: 'space-around',
+  justifyContent: 'space-between',
   backgroundColor: color.bar,
   borderRadius: 10,
+}
+
+const SEARCH_ICONS: ViewStyle = {
+  flexDirection: 'row',
+  alignContent: 'stretch',
 }
 
 const IMAGE: ImageStyle = {
@@ -125,8 +132,10 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
               />
               <Icons size={35} name='clear' color={color.primary} />
             </View>
-            <Icons size={35} name='directions-walk' color={color.primary} />
-            <Icons size={35} name='directions-car' color={color.primary} />
+            <View style={SEARCH_ICONS}>
+              <Icons size={35} name='directions-walk' color={color.primary} />
+              <Icons size={35} name='directions-car' color={color.primary} />
+            </View>
           </View>
 
           {groups.map((group) => (

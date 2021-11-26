@@ -26,6 +26,7 @@ export type TabNavigatorParamList = {
   search: undefined
   groups: undefined
   profile: undefined
+  newgroup: undefined
 }
 
 const Tab = createBottomTabNavigator<TabNavigatorParamList>()
@@ -44,7 +45,8 @@ export const TabNavigator = () => {
         tabBarActiveTintColor: color.primary,
         tabBarInactiveTintColor: color.primary,
         tabBarInactiveBackgroundColor: color.bar,
-        tabBarActiveBackgroundColor: color.bar, }}
+        tabBarActiveBackgroundColor: color.bar,
+      }}
     >
       <Tab.Screen
         name="search"

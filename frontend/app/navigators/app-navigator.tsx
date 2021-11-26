@@ -8,7 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen } from "../screens"
+import { LoginScreen, RegisterScreen, NewGroupScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { TabNavigator } from "./tab-navigator"
 
@@ -25,11 +25,10 @@ import { TabNavigator } from "./tab-navigator"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
-  welcome: undefined
-  demo: undefined
-  demoList: undefined
   tabs: undefined
   login: undefined
+  register: undefined
+  newgroup: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -43,11 +42,10 @@ const AppStack = () => {
       }}
       initialRouteName="login"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
+      <Stack.Screen name="register" component={RegisterScreen} />
       <Stack.Screen name="tabs" component={TabNavigator} />
+      <Stack.Screen name="newgroup" component={NewGroupScreen} />
     </Stack.Navigator>
   )
 }

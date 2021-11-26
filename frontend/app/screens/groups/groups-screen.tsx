@@ -1,15 +1,19 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, ImageStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity,ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
+import { MaterialIcons as Icons } from "@expo/vector-icons" 
 
 
-const FULL: ViewStyle = { flex: 1 }
+const FULL: ViewStyle = {
+  flex: 1,
+  paddingTop: spacing[7],
+}
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -70,11 +74,17 @@ const GROUP_FOOTER_TEXT: ViewStyle = {
   flex: 1,
 }
 
+const ADD_BUTTON: TextStyle = {
+  alignSelf: 'flex-end',
+  paddingRight: spacing[2],
+  marginBottom: spacing[1],
+  position: 'absolute',
+  bottom: 0,
+}
+
 
 export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">> = observer(
   ({ navigation }) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
 
     const [groups, setGroups] = useState([])
 
@@ -89,25 +99,31 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
 
     // Pull in navigation via hook
     return (
-      <View testID="LoginScreen" style={FULL}>
+      <View testID="GroupScreen" style={FULL}>
         
         <Text style={TITLE} preset="header" text="Seus grupos" />
-        
-        <ScrollView style={CONTAINER}>
-          {groups.map((group) => (
-            <View key={group.id} style={GROUP_ITEM}>
-              <Icon icon="bug" style={IMAGE} />
-              <View>
-                <Text style={GROUP_NAME}>{group.name}</Text>
-                <Text style={GROUP_DESTINATION}>{group.destination}</Text>
-                <View style={GROUP_FOOTER}>
-                  <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
-                  <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+
+          <ScrollView style={CONTAINER}>
+            {groups.map((group) => (
+              <View key={group.id} style={GROUP_ITEM}>
+                <Icon icon="bug" style={IMAGE} />
+                <View>
+                  <Text style={GROUP_NAME}>{group.name}</Text>
+                  <Text style={GROUP_DESTINATION}>{group.destination}</Text>
+                  <View style={GROUP_FOOTER}>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
+            ))}
+
+          </ScrollView>
+
+          <TouchableOpacity style={ADD_BUTTON} onPress={() => {navigation.navigate("newgroup") }}>
+            <Icons size={60} name='add-box' color={color.primary} />
+          </TouchableOpacity>
+
       </View>
     )
   },
