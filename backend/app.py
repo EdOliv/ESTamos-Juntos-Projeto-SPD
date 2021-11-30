@@ -8,7 +8,7 @@ from routes.user import user
 
 from extensions.jwt import jwt
 from extensions.mail import mail
-from models.database import db, ma, mongo_db
+from models.database import db, ma
 import os
 import json
 
