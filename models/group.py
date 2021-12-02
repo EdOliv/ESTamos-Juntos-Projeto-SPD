@@ -1,6 +1,7 @@
 from typing import List
 from models.database import db
 from models.user import User
+from sqlalchemy import or_
 import datetime
 
 
@@ -12,12 +13,12 @@ class Group(db.Model):
   picture_url = db.Column(db.String(128), nullable=True)
   description = db.Column(db.String(256), nullable=True)
 
-  start_lat = db.Column(db.Float(), nullable=False)
-  start_lng = db.Column(db.Float(), nullable=False)
+  start_lat = db.Column(db.Float(), nullable=True)
+  start_lng = db.Column(db.Float(), nullable=True)
   start_name = db.Column(db.String(128), nullable=False)
 
-  destination_lat = db.Column(db.Float(), nullable=False)
-  destination_lng = db.Column(db.Float(), nullable=False)
+  destination_lat = db.Column(db.Float(), nullable=True)
+  destination_lng = db.Column(db.Float(), nullable=True)
   destination_name = db.Column(db.String(128), nullable=False)
 
   is_visible = db.Column(db.Boolean, default=True)
@@ -47,6 +48,10 @@ class Group(db.Model):
     return Group.query.filter(
         Group.name.like(name)
     ).all()
+
+  @staticmethod
+  def find_by_user(user: User) -> List["Group"]:
+    return Group.query.filter(or_(Group.group_users.any(user=user), Group.created_by == user)).first()
 
   # CRUD methods
   @staticmethod
