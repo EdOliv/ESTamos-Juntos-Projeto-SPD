@@ -25,7 +25,7 @@ def login():
   request_data = request.get_json()
   user_data = request_data["user"]
 
-  user = User.find_by_username(user_data["login"])
+  user = User.find_by_email(user_data["email"])
   if not user:
     response = {
         "message": "Incorrect login or password"
@@ -44,7 +44,7 @@ def login():
 
   user = user_schema.dump(user)
 
-  identity = {'login': user["username"],
+  identity = {'username': user["username"],
               'name': user["name"],
               'id': user["id"]}
   access_token = create_access_token(identity=identity)
