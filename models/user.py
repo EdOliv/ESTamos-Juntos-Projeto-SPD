@@ -12,7 +12,7 @@ class User(db.Model):
   username = db.Column(db.String(100), unique=True,
                        primary_key=True, nullable=False)
   _password = db.Column("password", db.String(120),
-                        unique=True, nullable=False)
+                        unique=False, nullable=False)
 
   phone = db.Column(db.String(100), nullable=True)
   profile_picture_url = db.Column(db.String(100), nullable=True)
