@@ -26,13 +26,18 @@ class Group(db.Model):
 
   group_type = db.Column(db.String(64), nullable=True)
 
-  created_by_id = db.Column(db.Integer, db.ForeignKey(User.id))
+  meeting_time = db.Column(db.Time(timezone=True), nullable=False,
+                           default=datetime.time())
+
+  created_by_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
   created_by = db.relationship(
-      "User", backref=db.backref("owned_groups", uselist=True))
+      "User", backref=db.backref("owned_groups", uselist=True), foreign_keys=[created_by_id])
   created_on = db.Column(db.DateTime(timezone=True),
                          unique=False,
                          nullable=False,
                          default=datetime.datetime.utcnow)
+
+  joined_users = db.relationship("UserGroup", back_populates="group")
 
   def __repr__(self):
     return f'Group {self.name}'

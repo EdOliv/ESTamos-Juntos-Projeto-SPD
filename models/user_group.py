@@ -5,17 +5,18 @@ import datetime
 class UserGroup(db.Model):
   __tablename__ = 'user_group'
   user_id = db.Column(db.Integer, db.ForeignKey(
-      'user.id'), primary_key=True)
+      'user.id'), primary_key=True, nullable=False)
   group_id = db.Column(db.Integer, db.ForeignKey(
-      'group.id'), primary_key=True)
+      'group.id'), primary_key=True, nullable=False)
+
   join_date = db.Column(db.DateTime(timezone=True),
                         unique=False,
                         nullable=False,
                         default=datetime.datetime.utcnow)
-  group = db.relationship('Group', backref=db.backref(
-      'group_users', passive_deletes='all'))
-  user = db.relationship('User', backref=db.backref(
-      'group_users', passive_deletes='all'))
+  user = db.relationship(
+      'User', back_populates="joined_groups")
+  group = db.relationship(
+      'Group', back_populates="joined_users")
 
   @staticmethod
   def create(user_group: "UserGroup", commit: bool = True):

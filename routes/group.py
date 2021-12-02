@@ -3,8 +3,11 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity
 )
 from marshmallow import ValidationError
+
+from models.database import commit_transaction
 from models.group import Group
 from models.user import User
+from models.user_group import UserGroup
 from schemas.group_schema import GroupSchema
 
 group = Blueprint('group', __name__)
@@ -44,17 +47,32 @@ def find_by_user_id(user_id: int):
 def join_group(id: int):
   user = User.find_by_id(get_jwt_identity())
   group = Group.find_by_id(id)
-  group.group_users.add(user)
+
+  user_group = UserGroup()
+  user_group.group = group
+  user_group.user = user
+
+  user.joined_groups.append(user_group)
+  commit_transaction()
+
   group = group_schema.dump(group, many=False)
   return jsonify(group=group), 200
 
 
-@group.route(f'{ROUTE_PREFIX}/<id>/remove_from_group', methods=['POST'])
+@group.route(f'{ROUTE_PREFIX}/<id>/remove_from_group/<user_id>', methods=['POST'])
 @jwt_required()
-def remove_from_group(id: int):
-  user = User.find_by_id(get_jwt_identity())
+def remove_from_group(id: int, user_id: int):
+  user = User.find_by_id(user_id)
   group = Group.find_by_id(id)
-  group.group_users.remove(user)
+
+  for user_group in group.joined_users:
+    if user_group.user == user:
+      UserGroup.delete(user_group)
+      commit_transaction()
+
+      group = group_schema.dump(group, many=False)
+      return jsonify(group=group), 200
+
   group = group_schema.dump(group, many=False)
   return jsonify(group=group), 200
 
@@ -66,7 +84,15 @@ def create():
     group_data = request.get_json()
     new_group = group_schema.load(
         group_data, many=False)  # type: Group
-    Group.create(new_group)
+
+    user = User.find_by_id(get_jwt_identity())
+    new_group.created_by = user
+
+    res = Group.create(new_group)
+
+    if not res:
+      return jsonify({"message": "An error occurred while creating group"}), 400
+
     new_group = group_schema.dump(new_group, many=False)
     return jsonify(group=new_group), 200
   except Exception as e:
@@ -83,6 +109,8 @@ def update():
     schema = GroupSchema()
     new_group = schema.load(
         group_data, many=False)  # type: Group
+    new_group.id = group_data['id']
+
     old_group = Group.find_by_id(new_group.id)
 
     if not Group.update(old_group,
