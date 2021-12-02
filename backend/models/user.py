@@ -17,6 +17,22 @@ class User(db.Model):
   phone = db.Column(db.String(100), nullable=True)
   profile_picture_url = db.Column(db.String(100), nullable=True)
 
+  def __init__(self,
+               id=None,
+               name=None,
+               email=None,
+               username=None,
+               password=None,
+               phone=None,
+               profile_picture_url=None):
+    self.id = id
+    self.name = name
+    self.email = email
+    self.username = username
+    self.password = password
+    self.phone = phone
+    self.profile_picture_url = profile_picture_url
+
   def __repr__(self):
     return f'User {self.name}'
 

@@ -1,3 +1,4 @@
+from marshmallow.decorators import post_load
 from models.database import ma
 from models.user import User
 from marshmallow import fields, validates, ValidationError, validate
@@ -7,7 +8,6 @@ import re
 class UserSchema(ma.SQLAlchemySchema):
   class Meta:
     model = User
-    load_instance = True
 
   id = ma.auto_field(dump_only=True)
   name = ma.auto_field(required=True)
@@ -48,3 +48,7 @@ class UserSchema(ma.SQLAlchemySchema):
 
     if not all(rule(value) for rule in rules):
       raise ValidationError(error)
+
+  @post_load
+  def make_user(self, data, **kwargs):
+    return User(**data)
