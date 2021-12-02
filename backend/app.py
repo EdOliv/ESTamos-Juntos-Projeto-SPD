@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from routes.auth import auth
 from routes.refresh import refresh
 from routes.user import user
+from routes.group import group
 
 from extensions.jwt import jwt
 from extensions.mail import mail
@@ -52,11 +53,13 @@ ma.init_app(app)
 mail.init_app(app)
 
 with app.app_context():
+  # db.drop_all()
   db.create_all()
 
 app.register_blueprint(auth)
 app.register_blueprint(refresh)
 app.register_blueprint(user)
+app.register_blueprint(group)
 
 
 # Invoked callback to set response code in all responses
