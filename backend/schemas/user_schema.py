@@ -19,6 +19,7 @@ class UserSchema(ma.SQLAlchemySchema):
                             data_key="password",
                             attribute="password")
   phone = ma.auto_field(required=False)
+  profile_picture_url = ma.auto_field(required=False)
 
   @validates("_password")
   def validate_password(self, value):
