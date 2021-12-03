@@ -16,15 +16,15 @@ import { NavigatorParamList } from "../../navigators"
 
 const FULL: ViewStyle = {
   flex: 1,
-  paddingTop: spacing[7],
+  paddingTop: spacing[8],
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'stretch'
+  alignContent: 'center'
 }
 
 const CONTAINER: ViewStyle = {
   justifyContent: 'center',
-  alignContent: 'stretch',
+  alignContent: 'center',
   paddingBottom: spacing[2],
 }
 

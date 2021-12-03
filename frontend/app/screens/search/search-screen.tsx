@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ImageStyle, ScrollView } from "react-native"
+import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 
 import { Text, TextField, Icon } from "../../components"
@@ -8,6 +8,11 @@ import { Text, TextField, Icon } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons" 
+
+
+// <TouchableOpacity style={FILTER_BUTTON}>
+//<Icons size={35} name='search' color={color.primary} />
+//</TouchableOpacity>
 
 
 const FULL: ViewStyle = {
@@ -36,25 +41,27 @@ const TITLE: TextStyle = {
   paddingVertical: spacing[3],
 }
 
-const SEARCH_AREA: ViewStyle = {
+const FIELD_TITLE: TextStyle = {
+  ...TEXT,
+  fontSize: 18,
+  fontWeight: "bold",
+  marginTop: spacing[3],
+}
+
+const FILTERS: ViewStyle = {
+  flexDirection: 'row',
   alignContent: 'stretch',
-  justifyContent: 'flex-end',
+  justifyContent: 'flex-start',
+  marginTop: spacing[3],
   paddingBottom: spacing[5],
   borderBottomColor: color.primary,
-  borderBottomWidth: 2,
-  marginTop: spacing[5],
+  borderBottomWidth: 1,
 }
 
-const SEARCH_BAR: ViewStyle = {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  backgroundColor: color.bar,
-  borderRadius: 10,
-}
-
-const SEARCH_ICONS: ViewStyle = {
-  flexDirection: 'row',
-  alignContent: 'stretch',
+const FILTER_BUTTON: TextStyle = {
+  flexDirection: "row",
+  alignItems: 'center',
+  marginRight: spacing[8],
 }
 
 const IMAGE: ImageStyle = {
@@ -121,22 +128,24 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
         <Text style={TITLE} preset="header" text="ESTamos juntos" />
 
         <ScrollView style={CONTAINER}>
-          <View style={SEARCH_AREA}>
-            <View style={SEARCH_BAR}>
-              <Icons size={35} name='search' color={color.primary} />
-              <TextField
-                value={search}
-                onChangeText={setSearch}
-                returnKeyType="go"
-                blurOnSubmit={false}
-              />
-              <Icons size={35} name='clear' color={color.primary} />
+            <Text style={FIELD_TITLE}>Pesquisar por grupos</Text>
+            <TextField
+              value={search}
+              onChangeText={setSearch}
+              returnKeyType="go"
+              blurOnSubmit={false}
+              placeholder="Inserir termos de busca..."
+            />
+            <View style={FILTERS}>
+              <TouchableOpacity style={FILTER_BUTTON}>
+                <Icons size={35} name='directions-walk' color={color.primary} />
+                <Text style={TEXT} text="Caminhada" />
+              </TouchableOpacity>
+              <TouchableOpacity style={FILTER_BUTTON}>
+                <Icons size={35} name='directions-car' color={color.primary} />
+                <Text style={TEXT} text="Carona" />
+              </TouchableOpacity>
             </View>
-            <View style={SEARCH_ICONS}>
-              <Icons size={35} name='directions-walk' color={color.primary} />
-              <Icons size={35} name='directions-car' color={color.primary} />
-            </View>
-          </View>
 
           {groups.map((group) => (
             <View key={group.id} style={GROUP_ITEM}>

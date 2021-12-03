@@ -32,7 +32,7 @@ export type TabNavigatorParamList = {
 const Tab = createBottomTabNavigator<TabNavigatorParamList>()
 
 function TabBarIcon(props: { name: React.ComponentProps<typeof Icons>["name"]; color: string }) {
-  const iconStyle = { marginBottom: -3 }
+  const iconStyle = { marginBottom: -15 }
   return <Icons size={35} style={iconStyle} {...props} />
 }
 

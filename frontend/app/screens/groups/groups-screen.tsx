@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity,ImageStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon } from "../../components"

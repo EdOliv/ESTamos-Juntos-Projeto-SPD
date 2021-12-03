@@ -14,10 +14,11 @@ const INPUT: TextStyle = {
   fontFamily: typography.primary,
   color: color.text,
   minHeight: 44,
-  fontSize: 18,
+  fontSize: 14,
   backgroundColor: color.bar,
   paddingHorizontal: spacing[4],
-  borderRadius: 10
+  borderRadius: 10,
+  marginTop: -10,
 }
 
 // currently we have no presets, but that changes quickly when you build your app.

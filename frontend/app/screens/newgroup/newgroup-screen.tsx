@@ -26,7 +26,7 @@ const FULL: ViewStyle = {
 const CONTAINER: ViewStyle = {
   justifyContent: 'center',
   alignContent: 'stretch',
-  paddingBottom: spacing[2],
+  paddingBottom: spacing[6],
 }
 
 const TEXT: TextStyle = {
@@ -60,7 +60,6 @@ const ENTER_TEXT: TextStyle = {
   fontWeight: "bold",
   fontSize: 15,
   letterSpacing: 2,
-	marginBottom: spacing[2],
 }
 
 
