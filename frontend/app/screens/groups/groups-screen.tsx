@@ -105,17 +105,19 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
 
           <ScrollView style={CONTAINER}>
             {groups.map((group) => (
-              <View key={group.id} style={GROUP_ITEM}>
-                <Icon icon="bug" style={IMAGE} />
-                <View>
-                  <Text style={GROUP_NAME}>{group.name}</Text>
-                  <Text style={GROUP_DESTINATION}>{group.destination}</Text>
-                  <View style={GROUP_FOOTER}>
-                    <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
-                    <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+              <TouchableOpacity onPress={() => {navigation.navigate("details") }}>
+                <View key={group.id} style={GROUP_ITEM}>
+                  <Icon icon="bug" style={IMAGE} />
+                  <View>
+                    <Text style={GROUP_NAME}>{group.name}</Text>
+                    <Text style={GROUP_DESTINATION}>{group.destination}</Text>
+                    <View style={GROUP_FOOTER}>
+                      <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
+                      <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
 
           </ScrollView>

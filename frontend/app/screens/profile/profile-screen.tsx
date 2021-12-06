@@ -44,7 +44,7 @@ const IMAGE: ImageStyle = {
   width: 100,
   height: 100,
   alignSelf: "center",
-  marginTop: spacing[3],
+  marginTop: spacing[7],
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -53,6 +53,12 @@ const FIELD_TITLE: TextStyle = {
   fontWeight: "bold",
   marginTop: spacing[5],
   marginBottom: spacing[1],
+}
+
+const FIELD_TEXT: TextStyle = {
+  ...TEXT,
+  fontSize: 16,
+  marginTop: spacing[2],
 }
 
 const BUTTON_SAVE: ViewStyle = {
@@ -76,29 +82,23 @@ const BUTTON_TEXT: TextStyle = {
 }
 
 const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
+  paddingVertical: spacing[8],
   backgroundColor: color.background,
 }
 
 
-export const ProfileScreen: FC<
-  BottomTabNavigationProp<TabNavigatorParamList, "profile">
-> = observer(() => {
+export const ProfileScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "profile">> = observer(() => {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-
-  const emailTextInput = useRef(null)
-  const passwordTextInput = useRef(null)
-
   const logout = () => {
     console.log("LOGOUT")
     navigation.navigate("login")
+  }
+
+  const editProfile = () => {
+    navigation.navigate("editprofile")
   }
 
   // Pull in navigation via hook
@@ -111,53 +111,26 @@ export const ProfileScreen: FC<
         <Icon icon="bug" style={IMAGE} />
         
         <Text style={FIELD_TITLE}>Seu nome</Text>
-        <TextField
-          value={name}
-          onChangeText={setName}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            emailTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-        />
+        <Text style={FIELD_TEXT}>Proprietário</Text>
+
         <Text style={FIELD_TITLE}>Seu e-mail</Text>
-        <TextField
-          value={email}
-          onChangeText={setEmail}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            emailTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-          forwardedRef={emailTextInput}
-        />
-        <Text style={FIELD_TITLE}>Sua senha</Text>
-        <TextField
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          returnKeyType="go"
-          onSubmitEditing={logout}
-          forwardedRef={passwordTextInput}
-        />
+        <Text style={FIELD_TEXT}>proprietário@hotmail.com</Text>
+        
+
         <View style={FOOTER_CONTENT}>
           <Button
             testID="next-screen-button"
             style={BUTTON_SAVE}
             textStyle={BUTTON_TEXT}
-            text="SALVAR ALTERAÇÕES"
-            onPress={() => {
-              logout()
-            }}
+            text="EDITAR PERFIL"
+            onPress={editProfile}
           />
           <Button
             testID="next-screen-button"
             style={BUTTON_DELETE}
             textStyle={BUTTON_TEXT}
             text="EXCLUIR PERFIL"
-            onPress={() => {
-              logout()
-            }}
+            onPress={logout}
           />
         </View>
       </ScrollView>

@@ -26,7 +26,9 @@ export type TabNavigatorParamList = {
   search: undefined
   groups: undefined
   profile: undefined
+  editprofile: undefined
   newgroup: undefined
+  details: undefined
 }
 
 const Tab = createBottomTabNavigator<TabNavigatorParamList>()

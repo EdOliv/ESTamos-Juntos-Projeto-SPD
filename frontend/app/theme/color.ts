@@ -4,6 +4,7 @@ const palette = {
   purple: "#7B68EE",
   lilac: "#EAEAFF",
   red: "#FF0000",
+  gold: "#FFB700",
 }
 
 /**

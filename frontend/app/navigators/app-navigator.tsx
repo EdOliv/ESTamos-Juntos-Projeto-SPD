@@ -8,7 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { LoginScreen, RegisterScreen, NewGroupScreen } from "../screens"
+import { LoginScreen, RegisterScreen, NewGroupScreen, DetailsScreen, EditProfileScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { TabNavigator } from "./tab-navigator"
 
@@ -28,7 +28,9 @@ export type NavigatorParamList = {
   tabs: undefined
   login: undefined
   register: undefined
+  editprofile: undefined
   newgroup: undefined
+  details: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -45,7 +47,9 @@ const AppStack = () => {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="register" component={RegisterScreen} />
       <Stack.Screen name="tabs" component={TabNavigator} />
+      <Stack.Screen name="editprofile" component={EditProfileScreen} />
       <Stack.Screen name="newgroup" component={NewGroupScreen} />
+      <Stack.Screen name="details" component={DetailsScreen} />
     </Stack.Navigator>
   )
 }
