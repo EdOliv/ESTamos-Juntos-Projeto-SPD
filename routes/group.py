@@ -8,6 +8,8 @@ from models.database import commit_transaction
 from models.group import Group
 from models.user import User
 from models.user_group import UserGroup
+
+from schemas.user_schema import UserSchema
 from schemas.group_schema import GroupSchema
 
 group = Blueprint('group', __name__)
@@ -31,6 +33,19 @@ def find_by_id(id: int):
   group = Group.find_by_id(id)
   group = group_schema.dump(group, many=False)
   return jsonify(group=group), 200
+
+
+@group.route(f'{ROUTE_PREFIX}/<id>/users', methods=['GET'])
+@jwt_required()
+def find_group_users(id: int):
+  group = Group.find_by_id(id)
+
+  schema = UserSchema(many=True)
+  users = []
+  for user_group in group.joined_users:
+    users.append(user_group.user)
+  users = schema.dump(users)
+  return jsonify(users=users), 200
 
 
 @group.route(f'{ROUTE_PREFIX}/user/<user_id>', methods=['GET'])
@@ -67,6 +82,8 @@ def remove_from_group(id: int, user_id: int):
 
   for user_group in group.joined_users:
     if user_group.user == user:
+      if user_group.is_admin:
+        return jsonify(message="Admin cannot be removed from group"), 400
       UserGroup.delete(user_group)
       commit_transaction()
 
@@ -87,6 +104,11 @@ def create():
 
     user = User.find_by_id(get_jwt_identity())
     new_group.created_by = user
+
+    user_group = UserGroup()
+    user_group.group = new_group
+    user_group.user = user
+    user_group.is_admin = True
 
     res = Group.create(new_group)
 

@@ -13,6 +13,8 @@ class UserGroup(db.Model):
                         unique=False,
                         nullable=False,
                         default=datetime.datetime.utcnow)
+  is_admin = db.Column(db.Boolean, default=False)
+
   user = db.relationship(
       'User', back_populates="joined_groups")
   group = db.relationship(
