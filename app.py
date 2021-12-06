@@ -12,6 +12,7 @@ from extensions.mail import mail
 from models.database import db, ma
 import os
 import json
+import datetime
 
 load_dotenv()
 
@@ -31,6 +32,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 2048
 # JWT Config
 app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=60)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = datetime.timedelta(days=60)
 # Database Config
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["SQLALCHEMY_DATABASE_URI"]
