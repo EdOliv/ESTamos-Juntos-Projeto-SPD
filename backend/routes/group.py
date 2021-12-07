@@ -48,10 +48,10 @@ def find_group_users(id: int):
   return jsonify(users=users), 200
 
 
-@group.route(f'{ROUTE_PREFIX}/user/<user_id>', methods=['GET'])
+@group.route(f'{ROUTE_PREFIX}/my_groups', methods=['GET'])
 @jwt_required()
-def find_by_user_id(user_id: int):
-  user = User.find_by_id(user_id)
+def find_by_logged_user_id():
+  user = User.find_by_id(get_jwt_identity())
   groups = Group.find_by_user(user)
   groups = group_schema.dump(groups)
   return jsonify(groups=groups), 200
