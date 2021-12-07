@@ -131,7 +131,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
                 }}
               >
                 <Icon icon="bug" style={IMAGE} />
-                <View>
+                <View style={FULL}>
                   <Text style={GROUP_NAME}>{group.name}</Text>
                   <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
                   <View style={GROUP_FOOTER}>
