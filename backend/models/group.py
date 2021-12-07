@@ -56,7 +56,7 @@ class Group(db.Model):
 
   @staticmethod
   def find_by_user(user: User) -> List["Group"]:
-    return Group.query.filter(or_(Group.group_users.any(user=user), Group.created_by == user)).first()
+    return Group.query.filter(or_(Group.joined_users.any(user=user), Group.created_by == user)).all()
 
   # CRUD methods
   @staticmethod
