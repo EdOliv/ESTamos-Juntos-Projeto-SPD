@@ -1,6 +1,14 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  ImageStyle,
+  Alert,
+} from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon, Button } from "../../components"
@@ -115,7 +123,7 @@ const FOOTER_CONTENT: ViewStyle = {
 export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details">> = observer(
   ({ route, navigation }) => {
     // Pull in one of our MST stores
-    const { groupStore } = useStores()
+    const { authStore, groupStore } = useStores()
 
     const [group, setGroup] = useState<Group | null>({
       id: 0,
@@ -125,6 +133,7 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
       destinationName: "",
       meetingTime: "",
       description: "",
+      usersCount: 0,
     })
     const [people, setPeople] = useState([])
 
@@ -133,7 +142,7 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
         const newGroup = await groupStore.getGroupData(route.params.groupId)
         setGroup(newGroup)
 
-        const newPeople = await groupStore.getGroupUsers(route.params.groupId);
+        const newPeople = await groupStore.getGroupUsers(route.params.groupId)
         console.log(newPeople)
 
         setPeople(newPeople)
@@ -146,7 +155,21 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
     }
 
     const editGroup = () => {
-      navigation.navigate("newgroup")
+      navigation.navigate("groups")
+    }
+
+    const joinGroup = async () => {
+      const res = await groupStore.joinGroup(route.params.groupId)
+      if (res.kind === "ok") {
+        Alert.alert("Você faz parte do grupo!")
+        navigation.navigate("newgroup")
+      } else {
+        Alert.alert("Erro ao entrar no grupo!")
+      }
+    }
+
+    const isUserAdmin = (id: number) => {
+      return people.some((userGroup) => userGroup.user.id === id && userGroup.isAdmin)
     }
 
     return (
@@ -195,20 +218,32 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
           ))}
 
           <View style={FOOTER_CONTENT}>
-            <Button
-              testID="next-screen-button"
-              style={BUTTON_EDIT}
-              textStyle={BUTTON_TEXT}
-              text="EDITAR GRUPO"
-              onPress={editGroup}
-            />
-            <Button
-              testID="next-screen-button"
-              style={BUTTON_DELETE}
-              textStyle={BUTTON_TEXT}
-              text="EXCLUIR GRUPO"
-              onPress={goBack}
-            />
+            {isUserAdmin(authStore.userId) ? (
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_EDIT}
+                textStyle={BUTTON_TEXT}
+                text="EDITAR GRUPO"
+                onPress={editGroup}
+              />
+            ) : (
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_EDIT}
+                textStyle={BUTTON_TEXT}
+                text="ENTRAR NO GRUPO"
+                onPress={joinGroup}
+              />
+            )}
+            {isUserAdmin(authStore.userId) && (
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_DELETE}
+                textStyle={BUTTON_TEXT}
+                text="EXCLUIR GRUPO"
+                onPress={goBack}
+              />
+            )}
           </View>
         </View>
       </ScrollView>

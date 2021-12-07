@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { AuthApi } from "../../services/api/auth-api"
 import { withEnvironment } from "../extensions/with-environment"
@@ -8,6 +9,7 @@ import { withEnvironment } from "../extensions/with-environment"
 export const AuthStoreModel = types
   .model("AuthStore")
   .props({
+    userId: types.optional(types.number, 0),
     accessToken: types.optional(types.string, ""),
     refreshToken: types.optional(types.string, ""),
     isAuthenticated: types.boolean.create(false),
@@ -15,10 +17,12 @@ export const AuthStoreModel = types
   .extend(withEnvironment)
   .actions((self) => ({
     saveAuthData: (
+      userId: number,
       accessTokenSnapShot: string,
       refreshTokenSnapShot: string,
       isAuthenticated: boolean,
     ) => {
+      self.userId = userId;
       self.accessToken = accessTokenSnapShot
       self.refreshToken = refreshTokenSnapShot
       self.isAuthenticated = isAuthenticated
@@ -30,9 +34,10 @@ export const AuthStoreModel = types
       const result = await authApi.login(email, password)
 
       if (result.kind === "ok") {
-        self.saveAuthData(result.accessToken, result.refreshToken, true)
-        self.saveAuthData("", "", false)
+        const decodedToken: any = jwtDecode(result.accessToken)
+        self.saveAuthData(decodedToken.id, result.accessToken, result.refreshToken, true)
       } else {
+        self.saveAuthData(0, "", "", false)
         __DEV__ && console.tron.log(result.kind)
       }
     },
@@ -41,9 +46,10 @@ export const AuthStoreModel = types
       const result = await authApi.signUp(username, email, password)
 
       if (result.kind === "ok") {
-        self.saveAuthData(result.accessToken, result.refreshToken, true)
+        const decodedToken: any = jwtDecode(result.accessToken)
+        self.saveAuthData(decodedToken.id, result.accessToken, result.refreshToken, true)
       } else {
-        self.saveAuthData("", "", false)
+        self.saveAuthData(0, "", "", false)
         __DEV__ && console.tron.log(result.kind)
       }
     },

@@ -26,3 +26,4 @@ export type CreateGroupResult = { kind: "ok"; group: Group } | GeneralApiProblem
 export type GetGroupResult = { kind: "ok"; group: Group } | GeneralApiProblem
 export type GetGroupsResult = { kind: "ok"; groups: Group[] } | GeneralApiProblem
 export type GetGroupUsersResult = { kind: "ok"; usersGroup: UserGroup[] } | GeneralApiProblem
+export type JoinGroupResult = { kind: "ok"; group: Group } | GeneralApiProblem

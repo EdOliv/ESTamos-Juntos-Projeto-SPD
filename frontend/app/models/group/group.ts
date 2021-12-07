@@ -10,7 +10,8 @@ export const GroupModel = types.model("Group").props({
   startName: types.maybe(types.string),
   destinationName: types.maybeNull(types.string),
   meetingTime: types.maybeNull(types.string),
-  description: types.maybeNull(types.string)
+  description: types.maybeNull(types.string),
+  usersCount: types.maybeNull(types.number),
 })
 
 type GroupType = Instance<typeof GroupModel>

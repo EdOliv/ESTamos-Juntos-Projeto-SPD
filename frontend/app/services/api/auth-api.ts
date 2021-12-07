@@ -14,8 +14,7 @@ export class AuthApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.post("auth/login", {
-        email: email,
-        password: password,
+        user: { email: email, password: password },
       })
 
       // the typical ways to die when calling an api

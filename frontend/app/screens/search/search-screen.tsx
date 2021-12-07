@@ -116,21 +116,21 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
           name: "Grupo #1",
           destinationName: "Parada do shopping ABC",
           meetingTime: "08:00",
-          count: 5,
+          usersCount: 5,
         },
         {
           id: 2,
           name: "Grupo #2",
           destinationName: "Parada do shopping DEF",
           meetingTime: "12:00",
-          count: 5,
+          usersCount: 5,
         },
         {
           id: 3,
           name: "Grupo #3",
           destinationName: "Parada do shopping GHI",
           meetingTime: "18:00",
-          count: 5,
+          usersCount: 5,
         },
       ])
     }, [])
@@ -176,7 +176,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
             >
               <View style={GROUP_ITEM}>
                 <Icon icon="bug" style={IMAGE} />
-                <View>
+                <View style={FULL}>
                   <Text style={GROUP_NAME}>{group.name}</Text>
                   <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
                   <View style={GROUP_FOOTER}>

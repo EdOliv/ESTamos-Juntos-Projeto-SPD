@@ -5,6 +5,7 @@ import {
   GetGroupResult,
   GetGroupsResult,
   GetGroupUsersResult,
+  JoinGroupResult,
 } from "./api.types"
 import { getGeneralApiProblem } from "./api-problem"
 
@@ -48,6 +49,7 @@ export class GroupApi {
         destinationName: response.data.group.destination_name,
         meetingTime: response.data.group.meeting_time,
         description: response.data.group.description,
+        usersCount: response.data.group.users_count,
       }
 
       return { kind: "ok", group }
@@ -176,6 +178,35 @@ export class GroupApi {
       }))
 
       return { kind: "ok", usersGroup }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async joinGroup(id: number): Promise<JoinGroupResult> {
+    try {
+      // make the api call
+      const response: ApiResponse<any> = await this.api.apisauce.post(`group/${id}/join_group`)
+
+      // the typical ways to die when calling an api
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+
+      const group = {
+        id: response.data.group.id,
+        name: response.data.group.name,
+        groupType: response.data.group.group_type,
+        startName: response.data.group.start_name,
+        destinationName: response.data.group.destination_name,
+        meetingTime: response.data.group.meeting_time,
+        description: response.data.group.description,
+        usersCount: response.data.group.users_count,
+      }
+
+      return { kind: "ok", group }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }
