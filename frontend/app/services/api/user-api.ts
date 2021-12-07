@@ -14,12 +14,6 @@ export class UserApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.get("user/account")
-      
-      console.log(response.status)
-      console.log(response.originalError)
-      console.log(response.ok)
-      console.log(response.data)
-      console.log(1)
 
       // the typical ways to die when calling an api
       if (!response.ok) {
@@ -27,7 +21,14 @@ export class UserApi {
         if (problem) return problem
       }
 
-      const { user_data: userData } = response.data
+      const userData = {
+        id: response.data.user_data.id,
+        name: response.data.user_data.name,
+        email: response.data.user_data.email,
+        username: response.data.user_data.username,
+        phone: response.data.user_data.phone,
+        profilePictureUrl: response.data.user_data.profile_picture_url,
+      }
 
       return { kind: "ok", userData }
     } catch (e) {

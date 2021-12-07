@@ -8,8 +8,8 @@ export const UserModel = types.model("User").props({
   name: types.maybe(types.string),
   email: types.maybe(types.string),
   username: types.maybe(types.string),
-  profilePictureUrl: types.maybe(types.string),
-  phone: types.maybe(types.string)
+  profilePictureUrl: types.maybeNull(types.string),
+  phone: types.maybeNull(types.string)
 })
 
 type UserType = Instance<typeof UserModel>

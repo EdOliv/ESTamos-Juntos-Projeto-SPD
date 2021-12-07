@@ -39,7 +39,6 @@ export class AuthApi {
       const response: ApiResponse<any> = await this.api.apisauce.post("auth/sign_up", {
         user: { username: username, name: username, email: email, password: password },
       })
-      console.log(response.data)
 
       // the typical ways to die when calling an api
       if (!response.ok) {

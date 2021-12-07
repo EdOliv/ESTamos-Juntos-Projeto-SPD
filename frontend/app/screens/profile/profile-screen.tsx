@@ -90,8 +90,6 @@ export const ProfileScreen: FC<
   const username = userStore.userData ? userStore.userData.username : "--";
   const email = userStore.userData ? userStore.userData.email : "--";
 
-  console.log(username, email)
-
   const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
 
   useEffect(() => {

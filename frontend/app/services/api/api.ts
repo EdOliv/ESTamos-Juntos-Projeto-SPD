@@ -47,7 +47,6 @@ export class Api {
     })
 
     this.apisauce.addAsyncRequestTransform(request => async () => {
-      console.log(request.url)
       if (
         request.url &&
         !request.url.endsWith("login") &&
