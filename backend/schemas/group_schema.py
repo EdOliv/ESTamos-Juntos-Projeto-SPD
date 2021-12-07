@@ -23,6 +23,7 @@ class GroupSchema(ma.SQLAlchemySchema):
   is_visible = ma.auto_field(required=False)
   is_open = ma.auto_field(required=False)
   group_type = ma.auto_field(required=True)
+  users_count = ma.auto_field(dump_only=True)
   created_by_id = ma.auto_field(dump_only=True)
   created_by = fields.Nested('UserSchema')
   created_on = ma.auto_field(readonly=True)

@@ -1,10 +1,10 @@
 from models.database import ma
-from models.group import Group
+from models.user_group import UserGroup
 
 
-class GroupSchema(ma.SQLAlchemySchema):
+class UserGroupSchema(ma.SQLAlchemySchema):
   class Meta:
-    model = Group
+    model = UserGroup
     load_instance = True
 
   user_id = ma.auto_field(dump_only=True)
@@ -13,4 +13,3 @@ class GroupSchema(ma.SQLAlchemySchema):
   is_admin = ma.auto_field(required=True)
   group = ma.auto_field(required=True)
   user = ma.auto_field(required=True)
-  users_count = ma.auto_field(dump_only=True)
