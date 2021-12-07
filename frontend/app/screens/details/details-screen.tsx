@@ -1,30 +1,26 @@
-import React, { FC, useRef, useEffect, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import {
-	Text,
-	Icon,
-	TextField,
-	Button
-} from "../../components"
+import { Text, Icon, Button } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
-
+import { MaterialIcons as Icons } from "@expo/vector-icons"
+import { useStores } from "../../models"
+import { Group } from "../../models/group/group"
 
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'stretch'
+  alignContent: "stretch",
 }
 
 const CONTAINER: ViewStyle = {
-  justifyContent: 'center',
-  alignContent: 'stretch',
+  justifyContent: "center",
+  alignContent: "stretch",
   paddingBottom: spacing[6],
 }
 
@@ -36,8 +32,8 @@ const TEXT: TextStyle = {
 const HEADER: ViewStyle = {
   flexDirection: "row",
   marginTop: spacing[3],
-  alignItems: 'center',
-  justifyContent: 'center',
+  alignItems: "center",
+  justifyContent: "center",
 }
 
 const GROUP_IMAGE: ImageStyle = {
@@ -76,13 +72,13 @@ const USER_IMAGE: ImageStyle = {
 const USER_ITEM: ViewStyle = {
   flexDirection: "row",
   marginTop: spacing[3],
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  alignItems: "center",
+  justifyContent: "space-between",
 }
 
 const USER_SELECT: ViewStyle = {
   flexDirection: "row",
-  alignItems: 'center',
+  alignItems: "center",
 }
 
 const USER_NAME: TextStyle = {
@@ -116,22 +112,34 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-
 export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details">> = observer(
-  ({ navigation }) => {
+  ({ route, navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { groupStore } = useStores()
 
+    const [group, setGroup] = useState<Group | null>({
+      id: 0,
+      name: "",
+      groupType: "",
+      startName: "",
+      destinationName: "",
+      meetingTime: "",
+      description: "",
+    })
     const [people, setPeople] = useState([])
-  
+
     useEffect(() => {
-      setPeople([
-        { id: 1, name: "Proprietário", owner: 1},
-        { id: 2, name: "Participante #1", owner: 0},
-        { id: 3, name: "Participante #2", owner: 0},
-        { id: 4, name: "Participante #3", owner: 0},
-      ]);
-    }, []);
+      const loadGroup = async () => {
+        const newGroup = await groupStore.getGroupData(route.params.groupId)
+        setGroup(newGroup)
+
+        const newPeople = await groupStore.getGroupUsers(route.params.groupId);
+        console.log(newPeople)
+
+        setPeople(newPeople)
+      }
+      loadGroup()
+    }, [])
 
     const goBack = () => {
       navigation.navigate("groups")
@@ -143,47 +151,46 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
 
     return (
       <ScrollView testID="NewGroupScreen" style={FULL}>
-
         <TouchableOpacity onPress={goBack}>
-          <Icons size={35} name='keyboard-return' color={color.primary} />
+          <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
 
-				<View style={CONTAINER}>
+        <View style={CONTAINER}>
           <View style={HEADER}>
             <Icon icon="bug" style={GROUP_IMAGE} />
-            <Text style={GROUP_NAME}>Grupinho legal</Text>
+            <Text style={GROUP_NAME}>{group.name}</Text>
           </View>
 
-					<Text style={FIELD_TITLE}>Tipo do grupo</Text>
-          <Text style={FIELD_TEXT}>Caminhada</Text>
+          <Text style={FIELD_TITLE}>Tipo do grupo</Text>
+          <Text style={FIELD_TEXT}>{group.groupType}</Text>
 
           <Text style={FIELD_TITLE}>Ponto de encontro</Text>
-          <Text style={FIELD_TEXT}>Na frente da sala A21</Text>
+          <Text style={FIELD_TEXT}>{group.startName}</Text>
 
-					<Text style={FIELD_TITLE}>Destino</Text>
-          <Text style={FIELD_TEXT}>Parada do shopping tal</Text>
+          <Text style={FIELD_TITLE}>Destino</Text>
+          <Text style={FIELD_TEXT}>{group.destinationName}</Text>
 
-					<Text style={FIELD_TITLE}>Horário de saída</Text>
-          <Text style={FIELD_TEXT}>18:10</Text>
+          <Text style={FIELD_TITLE}>Horário de saída</Text>
+          <Text style={FIELD_TEXT}>{group.meetingTime}</Text>
 
-					<Text style={FIELD_TITLE}>Outros detalhes</Text>
-          <Text style={FIELD_TEXT}>Sem atrasos!</Text>
-          
+          <Text style={FIELD_TITLE}>Outros detalhes</Text>
+          <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
+
           <Text style={FIELD_TITLE}>Participantes</Text>
 
-          {people.map((person) => (
-            <View style={USER_ITEM}>
+          {people.map((userGroup) => (
+            <View key={userGroup.user.id} style={USER_ITEM}>
               <TouchableOpacity style={USER_SELECT}>
                 <Icon icon="bug" style={USER_IMAGE} />
-                <Text style={USER_NAME}>{person.name}</Text>
+                <Text style={USER_NAME}>{userGroup.user.username}</Text>
               </TouchableOpacity>
-              {person.owner?
-                <Icons size={30} name='vpn-key' color={color.palette.gold} />
-                :
+              {userGroup.isAdmin ? (
+                <Icons size={30} name="vpn-key" color={color.palette.gold} />
+              ) : (
                 <TouchableOpacity>
-                  <Icons size={30} name='clear' color={color.error} />
+                  <Icons size={30} name="clear" color={color.error} />
                 </TouchableOpacity>
-              }
+              )}
             </View>
           ))}
 
@@ -203,9 +210,7 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
               onPress={goBack}
             />
           </View>
-
         </View>
-
       </ScrollView>
     )
   },

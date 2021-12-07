@@ -120,14 +120,14 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
       <View testID="GroupScreen" style={FULL}>
         <Text style={TITLE} preset="header" text="Seus grupos" />
 
-        {groups.length > 0 ? (
+        {groups && groups.length > 0 ? (
           <ScrollView style={CONTAINER} horizontal={false} contentContainerStyle={FULL}>
             {groups.map((group) => (
               <TouchableOpacity
                 style={GROUP_ITEM}
                 key={group.id}
                 onPress={() => {
-                  navigation.navigate("details")
+                  navigation.navigate("details", { groupId: group.id })
                 }}
               >
                 <Icon icon="bug" style={IMAGE} />

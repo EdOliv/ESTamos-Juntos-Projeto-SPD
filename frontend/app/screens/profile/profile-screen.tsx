@@ -136,7 +136,7 @@ export const ProfileScreen: FC<
             testID="next-screen-button"
             style={BUTTON_DELETE}
             textStyle={BUTTON_TEXT}
-            text="EXCLUIR PERFIL"
+            text="SAIR"
             onPress={logout}
           />
         </View>

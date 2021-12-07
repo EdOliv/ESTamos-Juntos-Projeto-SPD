@@ -44,6 +44,18 @@ export const GroupStoreModel = types
         return null;
       }
     },
+    getGroupData: async (id: number) => {
+      const groupApi = new GroupApi(self.environment.api)
+      const result = await groupApi.getGroupData(id)
+
+      if (result.kind === "ok") {
+        // self.saveGroups(result.group)
+        return result.group;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null;
+      }
+    },
     searchGroups: async (name: string) => {
       const groupApi = new GroupApi(self.environment.api)
       const result = await groupApi.searchGroups(name)
@@ -63,6 +75,18 @@ export const GroupStoreModel = types
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
         return result.groups;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null;
+      }
+    },
+    getGroupUsers: async (id: number) => {
+      const groupApi = new GroupApi(self.environment.api)
+      const result = await groupApi.getGroupUsers(id)
+
+      if (result.kind === "ok") {
+        // self.saveGroups(result.group)
+        return result.usersGroup;
       } else {
         __DEV__ && console.tron.log(result.kind)
         return null;

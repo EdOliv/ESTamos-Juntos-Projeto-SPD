@@ -6,15 +6,13 @@ import { Text, TextField, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { StackScreenProps } from "@react-navigation/stack"
 import { useStores } from "../../models"
-
 
 // <TouchableOpacity style={FILTER_BUTTON}>
 // <Icons size={35} name='search' color={color.primary} />
 // </TouchableOpacity>
-
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -49,9 +47,9 @@ const FIELD_TITLE: TextStyle = {
 }
 
 const FILTERS: ViewStyle = {
-  flexDirection: 'row',
-  alignContent: 'stretch',
-  justifyContent: 'flex-start',
+  flexDirection: "row",
+  alignContent: "stretch",
+  justifyContent: "flex-start",
   marginTop: spacing[3],
   paddingBottom: spacing[5],
   borderBottomColor: color.primary,
@@ -60,7 +58,7 @@ const FILTERS: ViewStyle = {
 
 const FILTER_BUTTON: TextStyle = {
   flexDirection: "row",
-  alignItems: 'center',
+  alignItems: "center",
   marginRight: spacing[8],
 }
 
@@ -102,59 +100,80 @@ const GROUP_FOOTER_TEXT: ViewStyle = {
   flex: 1,
 }
 
-
 export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
     const { groupStore } = useStores()
 
     const [search, setSearch] = useState("")
-  
+
     const [groups, setGroups] = useState([])
-  
+
     useEffect(() => {
       setGroups([
-        { id: 1, name: "Grupo #1", destinationName: "Parada do shopping ABC", meetingTime: "08:00", count: 5 },
-        { id: 2, name: "Grupo #2", destinationName: "Parada do shopping DEF", meetingTime: "12:00", count: 5 },
-        { id: 3, name: "Grupo #3", destinationName: "Parada do shopping GHI", meetingTime: "18:00", count: 5 },
-      ]);
-    }, []);
+        {
+          id: 1,
+          name: "Grupo #1",
+          destinationName: "Parada do shopping ABC",
+          meetingTime: "08:00",
+          count: 5,
+        },
+        {
+          id: 2,
+          name: "Grupo #2",
+          destinationName: "Parada do shopping DEF",
+          meetingTime: "12:00",
+          count: 5,
+        },
+        {
+          id: 3,
+          name: "Grupo #3",
+          destinationName: "Parada do shopping GHI",
+          meetingTime: "18:00",
+          count: 5,
+        },
+      ])
+    }, [])
 
     const searchGroups = async () => {
-      const newGroups = await groupStore.searchGroups(search);
-      setGroups(newGroups);
+      const newGroups = await groupStore.searchGroups(search)
+      setGroups(newGroups)
     }
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
     return (
       <View testID="SearchScreen" style={FULL}>
-
         <Text style={TITLE} preset="header" text="ESTamos juntos" />
 
         <ScrollView style={CONTAINER}>
-            <Text style={FIELD_TITLE}>Pesquisar por grupos</Text>
-            <TextField
-              value={search}
-              onChangeText={setSearch}
-              returnKeyType="go"
-              blurOnSubmit={false}
-              onSubmitEditing={searchGroups}
-              placeholder="Inserir termos de busca..."
-            />
-            <View style={FILTERS}>
-              <TouchableOpacity style={FILTER_BUTTON}>
-                <Icons size={35} name='directions-walk' color={color.primary} />
-                <Text style={TEXT} text="Caminhada" />
-              </TouchableOpacity>
-              <TouchableOpacity style={FILTER_BUTTON}>
-                <Icons size={35} name='directions-car' color={color.primary} />
-                <Text style={TEXT} text="Carona" />
-              </TouchableOpacity>
-            </View>
+          <Text style={FIELD_TITLE}>Pesquisar por grupos</Text>
+          <TextField
+            value={search}
+            onChangeText={setSearch}
+            returnKeyType="go"
+            blurOnSubmit={false}
+            onSubmitEditing={searchGroups}
+            placeholder="Inserir termos de busca..."
+          />
+          <View style={FILTERS}>
+            <TouchableOpacity style={FILTER_BUTTON}>
+              <Icons size={35} name="directions-walk" color={color.primary} />
+              <Text style={TEXT} text="Caminhada" />
+            </TouchableOpacity>
+            <TouchableOpacity style={FILTER_BUTTON}>
+              <Icons size={35} name="directions-car" color={color.primary} />
+              <Text style={TEXT} text="Carona" />
+            </TouchableOpacity>
+          </View>
 
           {groups.map((group) => (
-            <TouchableOpacity key={group.id} onPress={() => {navigation.navigate("details") }}>
+            <TouchableOpacity
+              key={group.id}
+              onPress={() => {
+                navigation.navigate("details", { groupId: group.id })
+              }}
+            >
               <View style={GROUP_ITEM}>
                 <Icon icon="bug" style={IMAGE} />
                 <View>
@@ -168,7 +187,6 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
               </View>
             </TouchableOpacity>
           ))}
-
         </ScrollView>
       </View>
     )
