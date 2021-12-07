@@ -13,3 +13,4 @@ class GroupSchema(ma.SQLAlchemySchema):
   is_admin = ma.auto_field(required=True)
   group = ma.auto_field(required=True)
   user = ma.auto_field(required=True)
+  users_count = ma.auto_field(dump_only=True)

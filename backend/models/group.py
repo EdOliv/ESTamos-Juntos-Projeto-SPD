@@ -2,6 +2,7 @@ from typing import List
 from models.database import db
 from models.user import User
 from sqlalchemy import or_
+from sqlalchemy.ext.hybrid import hybrid_property
 import datetime
 
 
@@ -42,6 +43,10 @@ class Group(db.Model):
 
   def __repr__(self):
     return f'Group {self.name}'
+
+  @hybrid_property
+  def users_count(self):
+    return len(self.joined_users)
 
   # CRUD methods
   @staticmethod
