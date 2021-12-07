@@ -9,8 +9,8 @@ from models.group import Group
 from models.user import User
 from models.user_group import UserGroup
 
-from schemas.user_schema import UserSchema
 from schemas.group_schema import GroupSchema
+from schemas.user_group_schema import UserGroupSchema
 
 group = Blueprint('group', __name__)
 ROUTE_PREFIX = "/group"
@@ -40,12 +40,9 @@ def find_by_id(id: int):
 def find_group_users(id: int):
   group = Group.find_by_id(id)
 
-  schema = UserSchema(many=True)
-  users = []
-  for user_group in group.joined_users:
-    users.append(user_group.user)
-  users = schema.dump(users)
-  return jsonify(users=users), 200
+  schema = UserGroupSchema(many=True)
+  users_group = schema.dump(group.joined_users)
+  return jsonify(users_group=users_group), 200
 
 
 @group.route(f'{ROUTE_PREFIX}/my_groups', methods=['GET'])
