@@ -158,7 +158,7 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
             value={details}
             onChangeText={setDetails}
             returnKeyType="go"
-            onSubmitEditing={goBack}
+            onSubmitEditing={createGroup}
             blurOnSubmit={false}
             forwardedRef={detailsTextInput}
           />

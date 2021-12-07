@@ -26,7 +26,7 @@ export class GroupApi {
         start_name: startName,
         destination_name: destinationName,
         meeting_time: meetingTime,
-        description: description
+        description: description,
       })
 
       // the typical ways to die when calling an api
@@ -52,8 +52,40 @@ export class GroupApi {
     }
   }
 
-  async getUserGroups(
-  ): Promise<GetGroupsResult> {
+  async searchGroups(name: string): Promise<GetGroupsResult> {
+    try {
+      // make the api call
+      const response: ApiResponse<any> = await this.api.apisauce.get("group/", {
+        params: {
+          name,
+        },
+      })
+
+      // the typical ways to die when calling an api
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+
+      const groups = response.data.groups.map((group) => {
+        return {
+          id: group.id,
+          name: group.name,
+          startName: group.start_name,
+          destinationName: group.destination_name,
+          meetingTime: group.meeting_time,
+          usersCount: group.users_count,
+        }
+      })
+
+      return { kind: "ok", groups }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async getUserGroups(): Promise<GetGroupsResult> {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.get("group/my_groups")
@@ -64,7 +96,16 @@ export class GroupApi {
         if (problem) return problem
       }
 
-      const groups = response.data.groups
+      const groups = response.data.groups.map((group) => {
+        return {
+          id: group.id,
+          name: group.name,
+          startName: group.start_name,
+          destinationName: group.destination_name,
+          meetingTime: group.meeting_time,
+          usersCount: group.users_count,
+        }
+      })
 
       return { kind: "ok", groups }
     } catch (e) {

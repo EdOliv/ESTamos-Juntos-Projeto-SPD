@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 
 import { Text, TextField, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons" 
+import { StackScreenProps } from "@react-navigation/stack"
+import { useStores } from "../../models"
 
 
 // <TouchableOpacity style={FILTER_BUTTON}>
@@ -102,10 +103,10 @@ const GROUP_FOOTER_TEXT: ViewStyle = {
 }
 
 
-export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "search">> = observer(
+export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { groupStore } = useStores()
 
     const [search, setSearch] = useState("")
   
@@ -113,11 +114,16 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
   
     useEffect(() => {
       setGroups([
-        { id: 1, name: "Grupo #1", destination: "Parada do shopping ABC", time: "08:00", count: 5 },
-        { id: 2, name: "Grupo #2", destination: "Parada do shopping DEF", time: "12:00", count: 5 },
-        { id: 3, name: "Grupo #3", destination: "Parada do shopping GHI", time: "18:00", count: 5 },
+        { id: 1, name: "Grupo #1", destinationName: "Parada do shopping ABC", meetingTime: "08:00", count: 5 },
+        { id: 2, name: "Grupo #2", destinationName: "Parada do shopping DEF", meetingTime: "12:00", count: 5 },
+        { id: 3, name: "Grupo #3", destinationName: "Parada do shopping GHI", meetingTime: "18:00", count: 5 },
       ]);
     }, []);
+
+    const searchGroups = async () => {
+      const newGroups = await groupStore.searchGroups(search);
+      setGroups(newGroups);
+    }
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
@@ -133,6 +139,7 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
               onChangeText={setSearch}
               returnKeyType="go"
               blurOnSubmit={false}
+              onSubmitEditing={searchGroups}
               placeholder="Inserir termos de busca..."
             />
             <View style={FILTERS}>
@@ -152,10 +159,10 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
                 <Icon icon="bug" style={IMAGE} />
                 <View>
                   <Text style={GROUP_NAME}>{group.name}</Text>
-                  <Text style={GROUP_DESTINATION}>{group.destination}</Text>
+                  <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
                   <View style={GROUP_FOOTER}>
-                    <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
-                    <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.meetingTime}</Text>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.usersCount} pessoas</Text>
                   </View>
                 </View>
               </View>

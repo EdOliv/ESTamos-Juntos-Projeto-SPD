@@ -44,6 +44,18 @@ export const GroupStoreModel = types
         return null;
       }
     },
+    searchGroups: async (name: string) => {
+      const groupApi = new GroupApi(self.environment.api)
+      const result = await groupApi.searchGroups(name)
+
+      if (result.kind === "ok") {
+        // self.saveGroups(result.group)
+        return result.groups;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null;
+      }
+    },
     getUserGroups: async () => {
       const groupApi = new GroupApi(self.environment.api)
       const result = await groupApi.getUserGroups()

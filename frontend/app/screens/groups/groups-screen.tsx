@@ -54,10 +54,11 @@ const GROUP_EMPTY: ViewStyle = {
 
 const GROUP_EMPTY_TEXT: TextStyle = {
   flexWrap: "wrap",
-  textAlign: "center"
+  textAlign: "center",
 }
 
 const GROUP_ITEM: ViewStyle = {
+  alignSelf: "stretch",
   flexDirection: "row",
   marginTop: spacing[5],
   paddingBottom: spacing[5],
@@ -103,13 +104,16 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
     const [groups, setGroups] = useState([])
 
     useEffect(() => {
-      const loadGroups = async () => {
-        const newGroups = await groupStore.getUserGroups()
-        console.log(newGroups)
-        setGroups(newGroups)
-      }
-      loadGroups()
-    }, [])
+      const unsubscribe = navigation.addListener("focus", async () => {
+        const loadGroups = async () => {
+          const newGroups = await groupStore.getUserGroups()
+          console.log(newGroups)
+          setGroups(newGroups)
+        }
+        loadGroups()
+      })
+      return unsubscribe
+    }, [navigation])
 
     // Pull in navigation via hook
     return (
@@ -117,23 +121,22 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
         <Text style={TITLE} preset="header" text="Seus grupos" />
 
         {groups.length > 0 ? (
-          <ScrollView style={CONTAINER} horizontal={false}>
+          <ScrollView style={CONTAINER} horizontal={false} contentContainerStyle={FULL}>
             {groups.map((group) => (
               <TouchableOpacity
+                style={GROUP_ITEM}
                 key={group.id}
                 onPress={() => {
                   navigation.navigate("details")
                 }}
               >
-                <View style={GROUP_ITEM}>
-                  <Icon icon="bug" style={IMAGE} />
-                  <View>
-                    <Text style={GROUP_NAME}>{group.name}</Text>
-                    <Text style={GROUP_DESTINATION}>{group.destination}</Text>
-                    <View style={GROUP_FOOTER}>
-                      <Text style={GROUP_FOOTER_TEXT}>{group.time}</Text>
-                      <Text style={GROUP_FOOTER_TEXT}>{group.count} pessoas</Text>
-                    </View>
+                <Icon icon="bug" style={IMAGE} />
+                <View>
+                  <Text style={GROUP_NAME}>{group.name}</Text>
+                  <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
+                  <View style={GROUP_FOOTER}>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.meetingTime}</Text>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.usersCount} pessoas</Text>
                   </View>
                 </View>
               </TouchableOpacity>
