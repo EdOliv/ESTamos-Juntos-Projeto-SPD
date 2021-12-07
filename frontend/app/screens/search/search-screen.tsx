@@ -17,7 +17,6 @@ import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 const FULL: ViewStyle = {
   flex: 1,
-  paddingTop: spacing[7],
 }
 
 const CONTAINER: ViewStyle = {

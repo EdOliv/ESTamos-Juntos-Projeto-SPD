@@ -12,7 +12,6 @@ import { useStores } from "../../models"
 
 const FULL: ViewStyle = {
   flex: 1,
-  paddingTop: spacing[7],
 }
 
 const CONTAINER: ViewStyle = {

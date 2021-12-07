@@ -48,6 +48,9 @@ export const TabNavigator = () => {
         tabBarInactiveTintColor: color.primary,
         tabBarInactiveBackgroundColor: color.bar,
         tabBarActiveBackgroundColor: color.bar,
+        tabBarStyle: {
+          backgroundColor: color.bar,
+        }
       }}
     >
       <Tab.Screen

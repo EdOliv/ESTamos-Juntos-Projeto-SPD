@@ -13,7 +13,6 @@ import { saveString } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
-  paddingTop: spacing[7],
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
   alignContent: "stretch",

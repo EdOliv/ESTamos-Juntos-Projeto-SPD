@@ -5,12 +5,14 @@
  * and a "main" flow which the user will use once logged in.
  */
 import React from "react"
-import { useColorScheme } from "react-native"
+import { useColorScheme, View } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { LoginScreen, RegisterScreen, NewGroupScreen, DetailsScreen, EditProfileScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { TabNavigator } from "./tab-navigator"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { color } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -58,13 +60,24 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
+
+  const x = {
+    flex: 1,
+    paddingTop: insets.top,
+    backgroundColor: color.button
+  };
+
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
+      <View style={x}>
+
       <AppStack />
+      </View>
     </NavigationContainer>
   )
 }
