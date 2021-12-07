@@ -8,6 +8,7 @@ import { Text, Icon } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons" 
+import { useStores } from "../../models"
 
 
 const FULL: ViewStyle = {
@@ -84,15 +85,17 @@ const ADD_BUTTON: TextStyle = {
 
 export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">> = observer(
   ({ navigation }) => {
+    const { groupStore } = useStores()
 
     const [groups, setGroups] = useState([])
 
     useEffect(() => {
-      setGroups([
-        { id: 1, name: "Grupo #1", destination: "Parada do shopping ABC", time: "08:00", count: 5 },
-        { id: 2, name: "Grupo #2", destination: "Parada do shopping DEF", time: "12:00", count: 5 },
-        { id: 3, name: "Grupo #3", destination: "Parada do shopping GHI", time: "18:00", count: 5 },
-      ]);
+      const loadGroups = async () => {
+        const newGroups = await groupStore.getUserGroups();
+        console.log(newGroups)
+        setGroups(newGroups);
+      }
+      loadGroups();
     }, []);
 
 

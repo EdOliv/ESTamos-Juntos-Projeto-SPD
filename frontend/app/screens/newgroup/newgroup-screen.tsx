@@ -1,30 +1,25 @@
-import React, { FC, useRef, useEffect, useState } from "react"
+import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import {
-	Text,
-	Icon,
-	TextField,
-	Button
-} from "../../components"
+import { Text, Icon, TextField, Button } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
-
+import { MaterialIcons as Icons } from "@expo/vector-icons"
+import { useStores } from "../../models"
 
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'stretch'
+  alignContent: "stretch",
 }
 
 const CONTAINER: ViewStyle = {
-  justifyContent: 'center',
-  alignContent: 'stretch',
+  justifyContent: "center",
+  alignContent: "stretch",
   paddingBottom: spacing[6],
 }
 
@@ -61,41 +56,52 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
-
 export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgroup">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { groupStore } = useStores()
 
-		const [type, setType] = useState("")
+    const [type, setType] = useState("")
     const [name, setName] = useState("")
     const [meeting, setMeeting] = useState("")
     const [destination, setDestination] = useState("")
     const [hour, setHour] = useState("")
-		const [details, setDetails] = useState("")
-    
-    const passwordTextInput = useRef(null);
+    const [details, setDetails] = useState("")
+
+    const nameTextInput = useRef(null)
+    const meetingTextInput = useRef(null)
+    const destinationTextInput = useRef(null)
+    const hourTextInput = useRef(null)
+    const detailsTextInput = useRef(null)
 
     const goBack = () => {
       navigation.navigate("groups")
     }
 
+    const createGroup = async () => {
+      console.log("CREATE_GROUP")
+      const res = await groupStore.createGroup(name, type, meeting, destination, hour, details)
+      console.log(res)
+      navigation.navigate("groups")
+    }
+
     return (
       <ScrollView testID="NewGroupScreen" style={FULL}>
-
         <TouchableOpacity onPress={goBack}>
-          <Icons size={35} name='keyboard-return' color={color.primary} />
+          <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
 
-				<View style={CONTAINER}>
-					<Icon icon="bug" style={IMAGE} />
+        <View style={CONTAINER}>
+          <Icon icon="bug" style={IMAGE} />
 
-					<Text style={FIELD_TITLE}>Tipo do grupo</Text>
+          <Text style={FIELD_TITLE}>Tipo do grupo</Text>
           <TextField
             value={type}
             onChangeText={setType}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              nameTextInput.current.focus()
+            }}
             blurOnSubmit={false}
           />
 
@@ -104,8 +110,11 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
             value={name}
             onChangeText={setName}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              meetingTextInput.current.focus()
+            }}
             blurOnSubmit={false}
+            forwardedRef={nameTextInput}
           />
 
           <Text style={FIELD_TITLE}>Ponto de encontro</Text>
@@ -113,35 +122,45 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
             value={meeting}
             onChangeText={setMeeting}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              destinationTextInput.current.focus()
+            }}
             blurOnSubmit={false}
+            forwardedRef={meetingTextInput}
           />
 
-					<Text style={FIELD_TITLE}>Destino</Text>
+          <Text style={FIELD_TITLE}>Destino</Text>
           <TextField
             value={destination}
             onChangeText={setDestination}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              hourTextInput.current.focus()
+            }}
             blurOnSubmit={false}
+            forwardedRef={meetingTextInput}
           />
 
-					<Text style={FIELD_TITLE}>Horário de saída</Text>
+          <Text style={FIELD_TITLE}>Horário de saída</Text>
           <TextField
             value={hour}
             onChangeText={setHour}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              detailsTextInput.current.focus()
+            }}
             blurOnSubmit={false}
+            forwardedRef={hourTextInput}
           />
 
-					<Text style={FIELD_TITLE}>Outros detalhes</Text>
+          <Text style={FIELD_TITLE}>Outros detalhes</Text>
           <TextField
             value={details}
             onChangeText={setDetails}
             returnKeyType="go"
             onSubmitEditing={goBack}
             blurOnSubmit={false}
+            forwardedRef={detailsTextInput}
           />
 
           <Button
@@ -149,11 +168,9 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
             style={ENTER}
             textStyle={ENTER_TEXT}
             text="CRIAR GRUPO"
-            onPress={goBack}
+            onPress={createGroup}
           />
-
         </View>
-
       </ScrollView>
     )
   },
