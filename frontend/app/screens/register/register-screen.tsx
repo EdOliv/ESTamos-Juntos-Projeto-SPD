@@ -1,30 +1,26 @@
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, TouchableOpacity, ScrollView } from "react-native"
+import { View, ViewStyle, TextStyle, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import {
-  Button,
-  Text,
-  TextField,
-} from "../../components"
+import { Button, Text, TextField } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
-
+import { MaterialIcons as Icons } from "@expo/vector-icons"
+import { useStores } from "../../models"
 
 const FULL: ViewStyle = {
   flex: 1,
   paddingTop: spacing[7],
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'stretch'
+  alignContent: "stretch",
 }
 
 const CONTAINER: ViewStyle = {
-  justifyContent: 'center',
-  alignContent: 'stretch',
+  justifyContent: "center",
+  alignContent: "stretch",
   paddingBottom: spacing[2],
 }
 
@@ -63,22 +59,26 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
-
 export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { authStore } = useStores()
 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [firmPassword, setFirmPassword] = useState("")
-    
-    const passwordTextInput = useRef(null);
 
-    const login = () => {
-      console.log("LOGIN")
-      navigation.navigate("tabs")
+    const passwordTextInput = useRef(null)
+
+    const signUp = async () => {
+      console.log("SIGN_UP")
+      await authStore.signUp(name, email, password)
+      if (authStore.isAuthenticated) {
+        navigation.navigate("tabs")
+      } else {
+        Alert.alert("Error", "Sign up failed")
+      }
     }
 
     const goBack = () => {
@@ -88,9 +88,8 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
     // Pull in navigation via hook
     return (
       <ScrollView testID="RegisterScreen" style={FULL}>
-
         <TouchableOpacity onPress={goBack}>
-          <Icons size={35} name='keyboard-return' color={color.primary} />
+          <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
 
         <Text style={TITLE} preset="header" text="Registrar-se" />
@@ -101,7 +100,9 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             value={name}
             onChangeText={setName}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              passwordTextInput.current.focus()
+            }}
             blurOnSubmit={false}
           />
 
@@ -110,7 +111,9 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             value={email}
             onChangeText={setEmail}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              passwordTextInput.current.focus()
+            }}
             blurOnSubmit={false}
           />
 
@@ -120,7 +123,9 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             value={password}
             onChangeText={setPassword}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              passwordTextInput.current.focus()
+            }}
             forwardedRef={passwordTextInput}
           />
 
@@ -130,7 +135,7 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             value={firmPassword}
             onChangeText={setFirmPassword}
             returnKeyType="go"
-            onSubmitEditing={login}
+            onSubmitEditing={signUp}
             forwardedRef={passwordTextInput}
           />
 
@@ -140,12 +145,9 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             textStyle={ENTER_TEXT}
             text="REGISTRAR"
             onPress={() => {
-              login()
+              signUp()
             }}
           />
-
-
-
         </View>
       </ScrollView>
     )

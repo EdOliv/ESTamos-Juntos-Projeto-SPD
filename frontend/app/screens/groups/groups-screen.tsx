@@ -105,7 +105,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
 
           <ScrollView style={CONTAINER}>
             {groups.map((group) => (
-              <TouchableOpacity onPress={() => {navigation.navigate("details") }}>
+              <TouchableOpacity key={group.id} onPress={() => {navigation.navigate("details") }}>
                 <View key={group.id} style={GROUP_ITEM}>
                   <Icon icon="bug" style={IMAGE} />
                   <View>

@@ -1,6 +1,6 @@
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
+import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import {
@@ -12,6 +12,7 @@ import {
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
+import { useStores } from "../../models"
 
 
 const FULL: ViewStyle = {
@@ -71,16 +72,22 @@ const FOOTER_TEXT: TextStyle = {
 export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { authStore } = useStores()
 
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [password, setPassword] = useState("");
     
     const passwordTextInput = useRef(null);
 
-    const login = () => {
+    const login = async () => {
       console.log("LOGIN")
-      navigation.navigate("tabs")
+      await authStore.login(email, password);
+      
+      if (authStore.isAuthenticated) {
+        navigation.navigate("tabs")
+      } else {
+        Alert.alert("Error", "Login failed")
+      }
     }
 
     const register = () => {
