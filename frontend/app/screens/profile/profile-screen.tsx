@@ -9,6 +9,7 @@ import { Button, Text, Icon } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
+import { clear } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -99,8 +100,9 @@ export const ProfileScreen: FC<
     fetchData()
   }, [])
 
-  const logout = () => {
+  const logout = async () => {
     console.log("LOGOUT")
+    await clear();
     navigation.navigate("login")
   }
 

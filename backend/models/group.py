@@ -37,7 +37,8 @@ class Group(db.Model):
                          nullable=False,
                          default=datetime.datetime.utcnow)
 
-  joined_users = db.relationship("UserGroup", back_populates="group")
+  joined_users = db.relationship(
+      "UserGroup", cascade="all,delete", back_populates="group")
 
   def __repr__(self):
     return f'Group {self.name}'

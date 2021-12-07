@@ -17,7 +17,8 @@ class User(db.Model):
   phone = db.Column(db.String(100), nullable=True)
   profile_picture_url = db.Column(db.String(100), nullable=True)
 
-  joined_groups = db.relationship("UserGroup", back_populates="user")
+  joined_groups = db.relationship(
+      "UserGroup", cascade="all,delete", back_populates="user")
 
   def __init__(self,
                id=None,
