@@ -16,9 +16,9 @@ class UserGroup(db.Model):
   is_admin = db.Column(db.Boolean, default=False)
 
   user = db.relationship(
-      'User', back_populates="joined_groups")
+      'User', cascade="all,delete", back_populates="joined_groups")
   group = db.relationship(
-      'Group', back_populates="joined_users")
+      'Group', cascade="all,delete", back_populates="joined_users")
 
   @staticmethod
   def create(user_group: "UserGroup", commit: bool = True):

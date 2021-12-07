@@ -7,9 +7,8 @@ import { Text, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
-
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -19,6 +18,7 @@ const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
+  flexDirection: "row",
 }
 
 const TEXT: TextStyle = {
@@ -41,6 +41,20 @@ const IMAGE: ImageStyle = {
   height: 80,
   marginRight: spacing[5],
   marginLeft: spacing[3],
+}
+
+const GROUP_EMPTY: ViewStyle = {
+  flex: 1,
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  paddingHorizontal: spacing[4],
+  backgroundColor: color.background,
+}
+
+const GROUP_EMPTY_TEXT: TextStyle = {
+  flexWrap: "wrap",
+  textAlign: "center"
 }
 
 const GROUP_ITEM: ViewStyle = {
@@ -75,13 +89,12 @@ const GROUP_FOOTER_TEXT: ViewStyle = {
 }
 
 const ADD_BUTTON: TextStyle = {
-  alignSelf: 'flex-end',
+  alignSelf: "flex-end",
   paddingRight: spacing[2],
   marginBottom: spacing[1],
-  position: 'absolute',
+  position: "absolute",
   bottom: 0,
 }
-
 
 export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">> = observer(
   ({ navigation }) => {
@@ -91,23 +104,27 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
 
     useEffect(() => {
       const loadGroups = async () => {
-        const newGroups = await groupStore.getUserGroups();
+        const newGroups = await groupStore.getUserGroups()
         console.log(newGroups)
-        setGroups(newGroups);
+        setGroups(newGroups)
       }
-      loadGroups();
-    }, []);
-
+      loadGroups()
+    }, [])
 
     // Pull in navigation via hook
     return (
       <View testID="GroupScreen" style={FULL}>
-        
         <Text style={TITLE} preset="header" text="Seus grupos" />
 
-          <ScrollView style={CONTAINER}>
+        {groups.length > 0 ? (
+          <ScrollView style={CONTAINER} horizontal={false}>
             {groups.map((group) => (
-              <TouchableOpacity key={group.id} onPress={() => {navigation.navigate("details") }}>
+              <TouchableOpacity
+                key={group.id}
+                onPress={() => {
+                  navigation.navigate("details")
+                }}
+              >
                 <View style={GROUP_ITEM}>
                   <Icon icon="bug" style={IMAGE} />
                   <View>
@@ -121,13 +138,23 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
                 </View>
               </TouchableOpacity>
             ))}
-
           </ScrollView>
+        ) : (
+          <View style={GROUP_EMPTY}>
+            <Text style={GROUP_EMPTY_TEXT}>
+              Você não está participando em um grupo ainda. Por quê não criar um agora?
+            </Text>
+          </View>
+        )}
 
-          <TouchableOpacity style={ADD_BUTTON} onPress={() => {navigation.navigate("newgroup") }}>
-            <Icons size={60} name='add-box' color={color.primary} />
-          </TouchableOpacity>
-
+        <TouchableOpacity
+          style={ADD_BUTTON}
+          onPress={() => {
+            navigation.navigate("newgroup")
+          }}
+        >
+          <Icons size={60} name="add-box" color={color.primary} />
+        </TouchableOpacity>
       </View>
     )
   },
