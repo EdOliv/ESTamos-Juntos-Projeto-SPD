@@ -9,6 +9,7 @@ import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
+import { saveString } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -75,6 +76,8 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
       console.log("SIGN_UP")
       await authStore.signUp(name, email, password)
       if (authStore.isAuthenticated) {
+        await saveString("@ESTamosJuntos:accessToken", authStore.accessToken)
+        await saveString("@ESTamosJuntos:refreshToken", authStore.refreshToken)
         navigation.navigate("tabs")
       } else {
         Alert.alert("Error", "Sign up failed")

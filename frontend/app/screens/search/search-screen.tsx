@@ -11,8 +11,8 @@ import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 
 // <TouchableOpacity style={FILTER_BUTTON}>
-//<Icons size={35} name='search' color={color.primary} />
-//</TouchableOpacity>
+// <Icons size={35} name='search' color={color.primary} />
+// </TouchableOpacity>
 
 
 const FULL: ViewStyle = {
@@ -148,8 +148,8 @@ export const SearchScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "se
             </View>
 
           {groups.map((group) => (
-            <TouchableOpacity onPress={() => {navigation.navigate("details") }}>
-              <View key={group.id} style={GROUP_ITEM}>
+            <TouchableOpacity key={group.id} onPress={() => {navigation.navigate("details") }}>
+              <View style={GROUP_ITEM}>
                 <Icon icon="bug" style={IMAGE} />
                 <View>
                   <Text style={GROUP_NAME}>{group.name}</Text>

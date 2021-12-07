@@ -43,6 +43,7 @@
     "expo-localization": "9.1.0",
     "expo-status-bar": "~1.0.4",
     "i18n-js": "3.8.0",
+    "jwt-decode": "^3.1.2",
     "mobx": "6.1.8",
     "mobx-react-lite": "3.2.0",
     "mobx-state-tree": "5.0.1",

@@ -1,31 +1,34 @@
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView, Alert } from "react-native"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ImageStyle,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import {
-  Button,
-  Text,
-  AutoImage as Image,
-  TextField,
-} from "../../components"
+import { Button, Text, AutoImage as Image, TextField } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
-
+import { saveString } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
   paddingTop: spacing[8],
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'center'
+  alignContent: "center",
 }
 
 const CONTAINER: ViewStyle = {
-  justifyContent: 'center',
-  alignContent: 'center',
+  justifyContent: "center",
+  alignContent: "center",
   paddingBottom: spacing[2],
 }
 
@@ -65,9 +68,8 @@ const FOOTER_TEXT: TextStyle = {
   fontSize: 15,
   marginVertical: spacing[2],
   alignSelf: "center",
-  textDecorationLine: 'underline',
+  textDecorationLine: "underline",
 }
-
 
 export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
   ({ navigation }) => {
@@ -75,15 +77,17 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     const { authStore } = useStores()
 
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("");
-    
-    const passwordTextInput = useRef(null);
+    const [password, setPassword] = useState("")
+
+    const passwordTextInput = useRef(null)
 
     const login = async () => {
       console.log("LOGIN")
-      await authStore.login(email, password);
-      
+      await authStore.login(email, password)
+
       if (authStore.isAuthenticated) {
+        await saveString("@ESTamosJuntos:accessToken", authStore.accessToken)
+        await saveString("@ESTamosJuntos:refreshToken", authStore.refreshToken)
         navigation.navigate("tabs")
       } else {
         Alert.alert("Error", "Login failed")
@@ -91,8 +95,8 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     }
 
     const register = () => {
-      navigation.navigate("register");
-    };
+      navigation.navigate("register")
+    }
 
     // Pull in navigation via hook
     return (
@@ -104,7 +108,9 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             value={email}
             onChangeText={setEmail}
             returnKeyType="next"
-            onSubmitEditing={() => { passwordTextInput.current.focus(); }}
+            onSubmitEditing={() => {
+              passwordTextInput.current.focus()
+            }}
             blurOnSubmit={false}
           />
           <Text style={FIELD_TITLE}>Senha</Text>
@@ -126,11 +132,10 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             }}
           />
           <Text style={FOOTER_TEXT}>Esqueceu sua senha?</Text>
-          
+
           <TouchableOpacity onPress={register}>
             <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>
           </TouchableOpacity>
-        
         </View>
       </ScrollView>
     )

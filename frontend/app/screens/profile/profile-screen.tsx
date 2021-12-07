@@ -1,18 +1,14 @@
-import React, { FC, useRef, useState } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, ImageStyle } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 
-import {
-  Button,
-  Text,
-  TextField,
-  Icon
-} from "../../components"
+import { Button, Text, Icon } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
+import { useStores } from "../../models"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -86,11 +82,25 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-
-export const ProfileScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "profile">> = observer(() => {
+export const ProfileScreen: FC<
+  BottomTabNavigationProp<TabNavigatorParamList, "profile">
+> = observer(() => {
   // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const { userStore } = useStores()
+  const username = userStore.userData ? userStore.userData.username : "--";
+  const email = userStore.userData ? userStore.userData.email : "--";
+
+  console.log(username, email)
+
   const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log("FETCH_DATA")
+      await userStore.getAccountData()
+    }
+    fetchData()
+  }, [])
 
   const logout = () => {
     console.log("LOGOUT")
@@ -104,18 +114,16 @@ export const ProfileScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "p
   // Pull in navigation via hook
   return (
     <View testID="ProfileScreen" style={FULL}>
-      
       <Text style={TITLE} preset="header" text="Perfil" />
 
       <ScrollView style={CONTAINER}>
         <Icon icon="bug" style={IMAGE} />
-        
+
         <Text style={FIELD_TITLE}>Seu nome</Text>
-        <Text style={FIELD_TEXT}>Proprietário</Text>
+        <Text style={FIELD_TEXT}>{ username }</Text>
 
         <Text style={FIELD_TITLE}>Seu e-mail</Text>
-        <Text style={FIELD_TEXT}>proprietário@hotmail.com</Text>
-        
+        <Text style={FIELD_TEXT}>{ email }</Text>
 
         <View style={FOOTER_CONTENT}>
           <Button
@@ -134,7 +142,6 @@ export const ProfileScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "p
           />
         </View>
       </ScrollView>
-        
     </View>
   )
 })

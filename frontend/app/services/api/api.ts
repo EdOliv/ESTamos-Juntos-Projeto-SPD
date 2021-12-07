@@ -2,6 +2,9 @@ import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
+import jwtDecode from "jwt-decode";
+import { loadString, saveString } from "../../utils/storage";
+import { navigate } from "../../navigators";
 
 /**
  * Manages all requests to the API.
@@ -42,6 +45,47 @@ export class Api {
         Accept: "application/json",
       },
     })
+
+    this.apisauce.addAsyncRequestTransform(request => async () => {
+      console.log(request.url)
+      if (
+        request.url &&
+        !request.url.endsWith("login") &&
+        !request.url.endsWith("refresh") &&
+        !request.url.endsWith("sign_up")
+      ) {
+        const accessToken = await loadString("@ESTamosJuntos:accessToken");
+        if (!accessToken) {
+          navigate("login", {});
+        }
+  
+        const decoded: any = jwtDecode(accessToken);
+        const userTokenExpiration = new Date(decoded.exp * 1000 || 0);
+        const today = new Date();
+        if (today > userTokenExpiration) {
+          // refresh the token here
+          const userRefreshToken = await loadString(
+            "@ESTamosJuntos:refreshToken"
+          );
+          this.apisauce
+            .post("/refresh", null, {
+              headers: {
+                Authorization: "Bearer " + userRefreshToken,
+              },
+            })
+            .then(async (response: any) => {
+              const newAccessToken = response.data.access_token;
+              await saveString("@ESTamosJuntos:accessToken", newAccessToken)
+              request.headers.Authorization = `Bearer ${newAccessToken}`;
+            })
+            .catch(() => {
+              navigate("login", {});
+            });
+        } else {
+          request.headers.Authorization = `Bearer ${accessToken}`;
+        }
+      }
+    })
   }
 
   /**
@@ -67,7 +111,7 @@ export class Api {
     // transform the data into the format we are expecting
     try {
       const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
+      const resultUsers: any = rawUsers.map(convertUser)
       return { kind: "ok", users: resultUsers }
     } catch {
       return { kind: "bad-data" }
@@ -90,7 +134,7 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const resultUser: Types.User = {
+      const resultUser: any = {
         id: response.data.id,
         name: response.data.name,
       }
