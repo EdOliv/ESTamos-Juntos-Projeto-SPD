@@ -10,6 +10,7 @@ import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { saveString } from "../../utils/storage"
 
+
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
@@ -29,8 +30,8 @@ const TEXT: TextStyle = {
 }
 
 const TITLE: TextStyle = {
-  ...TEXT,
-  fontSize: 26,
+	...TEXT,
+  fontSize: 24,
   textAlign: "center",
   color: color.text,
   marginVertical: spacing[5],
@@ -40,8 +41,14 @@ const TITLE: TextStyle = {
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
   fontSize: 16,
-  fontFamily: typography.bold,
-  marginTop: spacing[5],
+  marginTop: spacing[6],
+	fontFamily: typography.bold,
+}
+
+const INSTRUCTIONS: TextStyle = {
+  ...TEXT,
+  fontSize: 14,
+  marginTop: spacing[4],
 }
 
 const ENTER: ViewStyle = {
@@ -57,55 +64,53 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
-export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
-    const { authStore } = useStores()
+const FOOTER_TEXT: TextStyle = {
+  ...TEXT,
+  fontSize: 13,
+  marginVertical: spacing[8],
+  alignSelf: "center",
+  textDecorationLine: "underline",
+}
 
-    const [name, setName] = useState("")
+
+export const ResetPasswordScreen: FC<
+StackScreenProps<NavigatorParamList, "reset_password">
+> = observer(
+
+	({ navigation }) => {
+    // Pull in one of our MST stores
+
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [firmPassword, setFirmPassword] = useState("")
 
     const passwordTextInput = useRef(null)
-
-    const signUp = async () => {
-      console.log("SIGN_UP")
-      await authStore.signUp(name, email, password)
-      if (authStore.isAuthenticated) {
-        await saveString("@ESTamosJuntos:accessToken", authStore.accessToken)
-        await saveString("@ESTamosJuntos:refreshToken", authStore.refreshToken)
-        navigation.navigate("tabs")
-      } else {
-        Alert.alert("Error", "Sign up failed")
-      }
-    }
 
     const goBack = () => {
       navigation.navigate("login")
     }
 
-    // Pull in navigation via hook
+		const send = () => {
+      navigation.navigate("login")
+    }
+
+		const register = () => {
+      navigation.navigate("register")
+    }
+
+    
     return (
-      <ScrollView testID="RegisterScreen" style={FULL}>
+      <ScrollView testID="ResetPasswordScreen" style={FULL}>
         <TouchableOpacity onPress={goBack}>
           <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
 
-        <Text style={TITLE} text="Registrar-se" />
+        <Text style={TITLE} text="Esqueceu sua senha?" />
 
         <View style={CONTAINER}>
-          <Text style={FIELD_TITLE}>Nome de usuário</Text>
-          <TextField
-            value={name}
-            onChangeText={setName}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              passwordTextInput.current.focus()
-            }}
-            blurOnSubmit={false}
-          />
-
+					<Text style={INSTRUCTIONS}>
+						Identifique-se com seu e-mail de registro para
+						receber as instruções e o link para criar uma nova senha.
+					</Text>
+					
           <Text style={FIELD_TITLE}>E-mail</Text>
           <TextField
             value={email}
@@ -117,37 +122,18 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
             blurOnSubmit={false}
           />
 
-          <Text style={FIELD_TITLE}>Senha</Text>
-          <TextField
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              passwordTextInput.current.focus()
-            }}
-            forwardedRef={passwordTextInput}
-          />
-
-          <Text style={FIELD_TITLE}>Confirmar senha</Text>
-          <TextField
-            secureTextEntry
-            value={firmPassword}
-            onChangeText={setFirmPassword}
-            returnKeyType="go"
-            onSubmitEditing={signUp}
-            forwardedRef={passwordTextInput}
-          />
-
           <Button
             testID="next-screen-button"
             style={ENTER}
             textStyle={ENTER_TEXT}
-            text="REGISTRAR"
-            onPress={() => {
-              signUp()
-            }}
+            text="ENVIAR"
+            onPress={send}
           />
+
+					<TouchableOpacity onPress={register}>
+            <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>
+          </TouchableOpacity>
+
         </View>
       </ScrollView>
     )

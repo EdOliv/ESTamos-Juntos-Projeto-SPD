@@ -3,7 +3,6 @@ import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
 
 import { Text, TextField, Icon } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
@@ -13,6 +12,7 @@ import { useStores } from "../../models"
 // <TouchableOpacity style={FILTER_BUTTON}>
 // <Icons size={35} name='search' color={color.primary} />
 // </TouchableOpacity>
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -27,23 +27,24 @@ const CONTAINER: ViewStyle = {
 const TEXT: TextStyle = {
   color: color.primary,
   fontFamily: typography.primary,
+  fontSize: 13,
 }
 
 const TITLE: TextStyle = {
   ...TEXT,
-  fontWeight: "bold",
-  fontSize: 28,
+  fontSize: 26,
   textAlign: "center",
   color: color.textButton,
   backgroundColor: color.button,
   paddingVertical: spacing[3],
+  fontFamily: typography.bold,
 }
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
   marginTop: spacing[5],
+  fontFamily: typography.bold,
 }
 
 const FILTERS: ViewStyle = {
@@ -79,13 +80,13 @@ const GROUP_ITEM: ViewStyle = {
 
 const GROUP_NAME: TextStyle = {
   ...TEXT,
-  fontSize: 20,
-  fontWeight: "bold",
+  fontSize: 18,
+  fontFamily: typography.bold,
 }
 
 const GROUP_DESTINATION: TextStyle = {
   ...TEXT,
-  fontSize: 16,
+  fontSize: 14,
   marginTop: spacing[3],
 }
 
@@ -94,10 +95,11 @@ const GROUP_FOOTER: ViewStyle = {
   flexDirection: "row",
 }
 
-const GROUP_FOOTER_TEXT: ViewStyle = {
+const GROUP_FOOTER_TEXT: TextStyle = {
   ...TEXT,
   marginTop: spacing[3],
   flex: 1,
+  fontSize: 12,
 }
 
 export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">> = observer(
@@ -144,7 +146,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
     // const navigation = useNavigation()
     return (
       <View testID="SearchScreen" style={FULL}>
-        <Text style={TITLE} preset="header" text="ESTamos juntos" />
+        <Text style={TITLE} text="ESTamos juntos" />
 
         <ScrollView style={CONTAINER}>
           <Text style={FIELD_TITLE}>Pesquisar por grupos</Text>

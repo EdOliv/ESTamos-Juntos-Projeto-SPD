@@ -12,11 +12,11 @@ import {
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Button, Text, AutoImage as Image, TextField } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
 import { saveString } from "../../utils/storage"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -44,9 +44,9 @@ const LOGO: ImageStyle = {
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
   marginTop: spacing[5],
+  fontFamily: typography.bold,
 }
 
 const ENTER: ViewStyle = {
@@ -58,14 +58,13 @@ const ENTER: ViewStyle = {
 const ENTER_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
-  fontWeight: "bold",
-  fontSize: 15,
+  fontSize: 13,
   letterSpacing: 2,
 }
 
 const FOOTER_TEXT: TextStyle = {
   ...TEXT,
-  fontSize: 15,
+  fontSize: 13,
   marginVertical: spacing[2],
   alignSelf: "center",
   textDecorationLine: "underline",
@@ -73,7 +72,7 @@ const FOOTER_TEXT: TextStyle = {
 
 export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
   ({ navigation }) => {
-    // Pull in one of our MST stores
+    
     const { authStore } = useStores()
 
     const [email, setEmail] = useState("")
@@ -96,6 +95,10 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
 
     const register = () => {
       navigation.navigate("register")
+    }
+
+    const forgotPassword = () => {
+      navigation.navigate("reset_password")
     }
 
     // Pull in navigation via hook
@@ -127,11 +130,12 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             style={ENTER}
             textStyle={ENTER_TEXT}
             text="ENTRAR"
-            onPress={() => {
-              login()
-            }}
+            onPress={login}
           />
-          <Text style={FOOTER_TEXT}>Esqueceu sua senha?</Text>
+
+          <TouchableOpacity onPress={forgotPassword}>
+            <Text style={FOOTER_TEXT}>Esqueceu sua senha?</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={register}>
             <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>

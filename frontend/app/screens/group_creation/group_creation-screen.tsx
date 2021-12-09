@@ -4,11 +4,11 @@ import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } 
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon, TextField, Button } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -37,8 +37,8 @@ const IMAGE: ImageStyle = {
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
+  fontFamily: typography.bold,
   marginTop: spacing[5],
 }
 
@@ -51,8 +51,7 @@ const ENTER: ViewStyle = {
 const ENTER_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
-  fontWeight: "bold",
-  fontSize: 15,
+  fontSize: 13,
   letterSpacing: 2,
 }
 

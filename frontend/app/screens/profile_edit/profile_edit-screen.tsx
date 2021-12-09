@@ -34,16 +34,6 @@ const TEXT: TextStyle = {
   fontFamily: typography.primary,
 }
 
-const TITLE: TextStyle = {
-  ...TEXT,
-  fontWeight: "bold",
-  fontSize: 28,
-  textAlign: "center",
-  color: color.textButton,
-  backgroundColor: color.button,
-  paddingVertical: spacing[3],
-}
-
 const IMAGE: ImageStyle = {
   width: 100,
   height: 100,
@@ -53,8 +43,8 @@ const IMAGE: ImageStyle = {
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
+  fontFamily: typography.bold,
   marginTop: spacing[5],
   marginBottom: spacing[1],
 }
@@ -74,8 +64,7 @@ const BUTTON_DELETE: ViewStyle = {
 const BUTTON_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
-  fontWeight: "bold",
-  fontSize: 15,
+  fontSize: 13,
   letterSpacing: 2,
 }
 

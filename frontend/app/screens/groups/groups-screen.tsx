@@ -28,12 +28,12 @@ const TEXT: TextStyle = {
 
 const TITLE: TextStyle = {
   ...TEXT,
-  fontWeight: "bold",
-  fontSize: 28,
+  fontSize: 26,
   textAlign: "center",
   color: color.textButton,
   backgroundColor: color.button,
   paddingVertical: spacing[3],
+  fontFamily: typography.bold,
 }
 
 const IMAGE: ImageStyle = {
@@ -68,13 +68,13 @@ const GROUP_ITEM: ViewStyle = {
 
 const GROUP_NAME: TextStyle = {
   ...TEXT,
-  fontSize: 20,
-  fontWeight: "bold",
+  fontSize: 18,
+  fontFamily: typography.bold,
 }
 
 const GROUP_DESTINATION: TextStyle = {
   ...TEXT,
-  fontSize: 16,
+  fontSize: 14,
   marginTop: spacing[3],
 }
 
@@ -83,10 +83,11 @@ const GROUP_FOOTER: ViewStyle = {
   flexDirection: "row",
 }
 
-const GROUP_FOOTER_TEXT: ViewStyle = {
+const GROUP_FOOTER_TEXT: TextStyle = {
   ...TEXT,
   marginTop: spacing[3],
   flex: 1,
+  fontSize: 12,
 }
 
 const ADD_BUTTON: TextStyle = {

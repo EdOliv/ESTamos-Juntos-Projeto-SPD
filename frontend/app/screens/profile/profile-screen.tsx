@@ -5,11 +5,10 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 
 import { Button, Text, Icon } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
-import { clear } from "../../utils/storage"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -28,12 +27,12 @@ const TEXT: TextStyle = {
 
 const TITLE: TextStyle = {
   ...TEXT,
-  fontWeight: "bold",
-  fontSize: 28,
+  fontSize: 26,
   textAlign: "center",
   color: color.textButton,
   backgroundColor: color.button,
   paddingVertical: spacing[3],
+  fontFamily: typography.bold,
 }
 
 const IMAGE: ImageStyle = {
@@ -45,15 +44,15 @@ const IMAGE: ImageStyle = {
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
+  fontFamily: typography.bold,
   marginTop: spacing[5],
   marginBottom: spacing[1],
 }
 
 const FIELD_TEXT: TextStyle = {
   ...TEXT,
-  fontSize: 16,
+  fontSize: 14,
   marginTop: spacing[2],
 }
 
@@ -66,8 +65,7 @@ const BUTTON_SAVE: ViewStyle = {
 const BUTTON_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
-  fontWeight: "bold",
-  fontSize: 15,
+  fontSize: 13,
   letterSpacing: 2,
 }
 

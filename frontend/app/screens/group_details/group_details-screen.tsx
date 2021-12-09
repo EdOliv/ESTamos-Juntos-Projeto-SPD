@@ -52,22 +52,22 @@ const GROUP_IMAGE: ImageStyle = {
 
 const GROUP_NAME: TextStyle = {
   color: color.text,
-  fontSize: 22,
-  fontFamily: typography.secondary,
+  fontSize: 20,
   marginTop: spacing[1],
   paddingLeft: spacing[4],
+  fontFamily: typography.bold,
 }
 
 const FIELD_TITLE: TextStyle = {
   ...TEXT,
-  fontSize: 18,
-  fontWeight: "bold",
+  fontSize: 16,
   marginTop: spacing[5],
+  fontFamily: typography.bold,
 }
 
 const FIELD_TEXT: TextStyle = {
   ...TEXT,
-  fontSize: 15,
+  fontSize: 14,
   marginTop: spacing[2],
 }
 
@@ -91,7 +91,7 @@ const USER_SELECT: ViewStyle = {
 
 const USER_NAME: TextStyle = {
   color: color.text,
-  fontSize: 15,
+  fontSize: 14,
   paddingLeft: spacing[3],
 }
 
@@ -110,8 +110,7 @@ const BUTTON_DELETE: ViewStyle = {
 const BUTTON_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
-  fontWeight: "bold",
-  fontSize: 15,
+  fontSize: 13,
   letterSpacing: 2,
 }
 
@@ -119,6 +118,7 @@ const FOOTER_CONTENT: ViewStyle = {
   paddingVertical: spacing[4],
   backgroundColor: color.background,
 }
+
 
 export const GroupDetailsScreen: FC<
 StackScreenProps<TabNavigatorParamList, "group_details">
@@ -144,7 +144,6 @@ StackScreenProps<TabNavigatorParamList, "group_details">
       const loadGroup = async () => {
         const newGroup = await groupStore.getGroupData(route.params.groupId)
         setGroup(newGroup)
-
         const newPeople = await groupStore.getGroupUsers(route.params.groupId)
         console.log(newPeople)
 
@@ -155,6 +154,14 @@ StackScreenProps<TabNavigatorParamList, "group_details">
 
     const goBack = () => {
       navigation.goBack()
+    }
+
+    const ownProfile = () => {
+      navigation.navigate("profile")
+    }
+
+    const otherProfile = (name: string) => {
+      navigation.navigate("profile_others", { groupUserName: name })
     }
 
     const deleteGroup = () => {
@@ -214,10 +221,18 @@ StackScreenProps<TabNavigatorParamList, "group_details">
 
           {people.map((userGroup) => (
             <View key={userGroup.user.id} style={USER_ITEM}>
-              <TouchableOpacity style={USER_SELECT}>
+              
+              <TouchableOpacity
+                style={USER_SELECT}
+                onPress={
+                  (authStore.userId === userGroup.user.id) ?
+                  (ownProfile) : (() => otherProfile(userGroup.user.username))
+                }
+              >
                 <Icon icon="bug" style={USER_IMAGE} />
                 <Text style={USER_NAME}>{userGroup.user.username}</Text>
               </TouchableOpacity>
+              
               {userGroup.isAdmin ? (
                 <Icons size={30} name="vpn-key" color={color.palette.gold} />
               ) : (
@@ -269,3 +284,7 @@ StackScreenProps<TabNavigatorParamList, "group_details">
     )
   },
 )
+
+
+
+//(ownProfile) : (() => {  navigation.navigate("profile_others", { groupUserId: userGroup.user.id })})}

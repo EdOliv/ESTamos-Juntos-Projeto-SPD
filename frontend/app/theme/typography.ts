@@ -17,12 +17,12 @@ export const typography = {
   /**
    * The primary font.  Used in most places.
    */
-  primary: Platform.select({ ios: "ComfortaaBold", android: "Roboto-Regular" }),
+  primary: Platform.select({ ios: "Comfortaa", android: "Comfortaa" }),
 
   /**
    * An alternate font used for perhaps titles and stuff.
    */
-  secondary: Platform.select({ ios: "ComfortaaBold", android: "Comfortaa-Bold" }),
+  bold: Platform.select({ ios: "ComfortaaBold", android: "ComfortaaBold" }),
 
   /**
    * Lets get fancy with a monospace font!

@@ -27,15 +27,16 @@ export type TabNavigatorParamList = {
   search: undefined
   groups: undefined
   profile: undefined
-  profile_edit: {
-    userId: number
-  }
+  profile_edit: undefined
   group_creation: undefined
   group_details: {
     groupId: number
   }
   group_edit: {
     groupId: number
+  }
+  profile_others: {
+    groupUserName: string
   }
 }
 
