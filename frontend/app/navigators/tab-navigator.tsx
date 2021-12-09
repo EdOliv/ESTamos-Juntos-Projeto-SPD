@@ -22,13 +22,19 @@ import { color } from "../theme"
  *   https://reactnavigation.org/docs/params/
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
+
 export type TabNavigatorParamList = {
   search: undefined
   groups: undefined
   profile: undefined
-  editprofile: undefined
-  newgroup: undefined
-  details: {
+  profile_edit: {
+    userId: number
+  }
+  group_creation: undefined
+  group_details: {
+    groupId: number
+  }
+  group_edit: {
     groupId: number
   }
 }

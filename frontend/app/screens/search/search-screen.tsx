@@ -171,7 +171,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
             <TouchableOpacity
               key={group.id}
               onPress={() => {
-                navigation.navigate("details", { groupId: group.id })
+                navigation.navigate("group_details", { groupId: group.id })
               }}
             >
               <View style={GROUP_ITEM}>

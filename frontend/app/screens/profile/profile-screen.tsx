@@ -37,8 +37,8 @@ const TITLE: TextStyle = {
 }
 
 const IMAGE: ImageStyle = {
-  width: 100,
-  height: 100,
+  width: 120,
+  height: 120,
   alignSelf: "center",
   marginTop: spacing[7],
 }
@@ -63,12 +63,6 @@ const BUTTON_SAVE: ViewStyle = {
   marginTop: spacing[5],
 }
 
-const BUTTON_DELETE: ViewStyle = {
-  paddingVertical: spacing[4],
-  backgroundColor: color.error,
-  marginVertical: spacing[3],
-}
-
 const BUTTON_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
@@ -78,13 +72,14 @@ const BUTTON_TEXT: TextStyle = {
 }
 
 const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[8],
+  paddingVertical: spacing[6],
   backgroundColor: color.background,
 }
 
 export const ProfileScreen: FC<
-  BottomTabNavigationProp<TabNavigatorParamList, "profile">
+BottomTabNavigationProp<TabNavigatorParamList, "profile">
 > = observer(() => {
+
   // Pull in one of our MST stores
   const { userStore } = useStores()
   const username = userStore.userData ? userStore.userData.username : "--";
@@ -100,14 +95,8 @@ export const ProfileScreen: FC<
     fetchData()
   }, [])
 
-  const logout = async () => {
-    console.log("LOGOUT")
-    await clear();
-    navigation.navigate("login")
-  }
-
   const editProfile = () => {
-    navigation.navigate("editprofile")
+    navigation.navigate("profile_edit")
   }
 
   // Pull in navigation via hook
@@ -131,13 +120,6 @@ export const ProfileScreen: FC<
             textStyle={BUTTON_TEXT}
             text="EDITAR PERFIL"
             onPress={editProfile}
-          />
-          <Button
-            testID="next-screen-button"
-            style={BUTTON_DELETE}
-            textStyle={BUTTON_TEXT}
-            text="SAIR"
-            onPress={logout}
           />
         </View>
       </ScrollView>

@@ -1,14 +1,14 @@
-import React, { FC, useRef, useState } from "react"
+import React, { FC, useEffect, useState, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon, TextField, Button } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -42,13 +42,19 @@ const FIELD_TITLE: TextStyle = {
   marginTop: spacing[5],
 }
 
-const ENTER: ViewStyle = {
+const BUTTON_EDIT: ViewStyle = {
   paddingVertical: spacing[4],
   backgroundColor: color.button,
-  marginVertical: spacing[6],
+  marginTop: spacing[5],
 }
 
-const ENTER_TEXT: TextStyle = {
+const BUTTON_DELETE: ViewStyle = {
+  paddingVertical: spacing[4],
+  backgroundColor: color.error,
+  marginVertical: spacing[3],
+}
+
+const BUTTON_TEXT: TextStyle = {
   ...TEXT,
   color: color.textButton,
   fontWeight: "bold",
@@ -56,11 +62,20 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
-export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgroup">> = observer(
-  ({ navigation }) => {
+const FOOTER_CONTENT: ViewStyle = {
+  paddingVertical: spacing[4],
+  backgroundColor: color.background,
+}
+
+
+export const GroupEditScreen: FC<StackScreenProps<
+TabNavigatorParamList, "group_edit">> = observer(
+
+  ({ route, navigation }) => {
     // Pull in one of our MST stores
     const { groupStore } = useStores()
 
+    const [id, setId] = useState(0)
     const [type, setType] = useState("")
     const [name, setName] = useState("")
     const [meeting, setMeeting] = useState("")
@@ -68,25 +83,40 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
     const [hour, setHour] = useState("")
     const [details, setDetails] = useState("")
 
+    useEffect(() => {
+      const loadGroup = async () => {
+        const editGroup = await groupStore.getGroupData(route.params.groupId)
+        setId(editGroup.id)
+        setType(editGroup.groupType)
+        setName(editGroup.name)
+        setMeeting(editGroup.startName)
+        setDestination(editGroup.destinationName)
+        setHour(editGroup.meetingTime)
+        setDetails(editGroup.description)
+      }
+      loadGroup()
+    }, [])
+
+    const goBack = () => {
+      navigation.navigate("group_details", { groupId: id })
+    }
+
+    const saveGroup = () => {
+      navigation.navigate("group_details", { groupId: id })
+    }
+
+    const deleteGroup = () => {
+      navigation.navigate("groups")
+    }
+
     const nameTextInput = useRef(null)
     const meetingTextInput = useRef(null)
     const destinationTextInput = useRef(null)
     const hourTextInput = useRef(null)
     const detailsTextInput = useRef(null)
 
-    const goBack = () => {
-      navigation.navigate("groups")
-    }
-
-    const createGroup = async () => {
-      console.log("CREATE_GROUP")
-      const res = await groupStore.createGroup(name, type, meeting, destination, hour, details)
-      console.log(res)
-      navigation.navigate("groups")
-    }
-
     return (
-      <ScrollView testID="NewGroupScreen" style={FULL}>
+      <ScrollView testID="GroupEditScreen" style={FULL}>
         <TouchableOpacity onPress={goBack}>
           <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
@@ -158,18 +188,28 @@ export const NewGroupScreen: FC<StackScreenProps<TabNavigatorParamList, "newgrou
             value={details}
             onChangeText={setDetails}
             returnKeyType="go"
-            onSubmitEditing={createGroup}
+            onSubmitEditing={saveGroup}
             blurOnSubmit={false}
             forwardedRef={detailsTextInput}
           />
 
-          <Button
-            testID="next-screen-button"
-            style={ENTER}
-            textStyle={ENTER_TEXT}
-            text="CRIAR GRUPO"
-            onPress={createGroup}
-          />
+          <View style={FOOTER_CONTENT}>
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_EDIT}
+                textStyle={BUTTON_TEXT}
+                text="SALVAR ALTERAÇÕES"
+                onPress={saveGroup}
+              />
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_DELETE}
+                textStyle={BUTTON_TEXT}
+                text="EXCLUIR GRUPO"
+                onPress={deleteGroup}
+              />
+
+          </View>
         </View>
       </ScrollView>
     )

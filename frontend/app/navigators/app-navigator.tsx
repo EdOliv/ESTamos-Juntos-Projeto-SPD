@@ -1,38 +1,29 @@
-/**
- * The app navigator (formerly "AppNavigator" and "MainNavigator") is used for the primary
- * navigation flows of your app.
- * Generally speaking, it will contain an auth flow (registration, login, forgot password)
- * and a "main" flow which the user will use once logged in.
- */
 import React from "react"
 import { useColorScheme, View } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { LoginScreen, RegisterScreen, NewGroupScreen, DetailsScreen, EditProfileScreen } from "../screens"
+import {
+  LoginScreen,
+  RegisterScreen,
+  GroupCreationScreen,
+  GroupDetailsScreen,
+  GroupEditScreen,
+  ProfileEditScreen
+} from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { TabNavigator } from "./tab-navigator"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { color } from "../theme"
 
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- */
+
 export type NavigatorParamList = {
   tabs: undefined
   login: undefined
   register: undefined
-  editprofile: undefined
-  newgroup: undefined
-  details: undefined
+  profile_edit: undefined
+  group_creation: undefined
+  group_details: undefined
+  group_edit: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -49,9 +40,10 @@ const AppStack = () => {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="register" component={RegisterScreen} />
       <Stack.Screen name="tabs" component={TabNavigator} />
-      <Stack.Screen name="editprofile" component={EditProfileScreen} />
-      <Stack.Screen name="newgroup" component={NewGroupScreen} />
-      <Stack.Screen name="details" component={DetailsScreen} />
+      <Stack.Screen name="profile_edit" component={ProfileEditScreen} />
+      <Stack.Screen name="group_creation" component={GroupCreationScreen} />
+      <Stack.Screen name="group_details" component={GroupDetailsScreen} />
+      <Stack.Screen name="group_edit" component={GroupEditScreen} />
     </Stack.Navigator>
   )
 }

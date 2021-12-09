@@ -12,12 +12,12 @@ import {
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, Icon, Button } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { Group } from "../../models/group/group"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -120,7 +120,10 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details">> = observer(
+export const GroupDetailsScreen: FC<
+StackScreenProps<TabNavigatorParamList, "group_details">
+> = observer(
+
   ({ route, navigation }) => {
     // Pull in one of our MST stores
     const { authStore, groupStore } = useStores()
@@ -151,21 +154,29 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
     }, [])
 
     const goBack = () => {
+      navigation.goBack()
+    }
+
+    const deleteGroup = () => {
       navigation.navigate("groups")
     }
 
     const editGroup = () => {
-      navigation.navigate("groups")
+      navigation.navigate("group_edit", { groupId: group.id })
     }
 
     const joinGroup = async () => {
       const res = await groupStore.joinGroup(route.params.groupId)
       if (res.kind === "ok") {
         Alert.alert("Você faz parte do grupo!")
-        navigation.navigate("newgroup")
+        navigation.navigate("groups")
       } else {
         Alert.alert("Erro ao entrar no grupo!")
       }
+    }
+
+    const leaveGroup = () => {
+      navigation.navigate("groups")
     }
 
     const isUserAdmin = (id: number) => {
@@ -173,7 +184,7 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
     }
 
     return (
-      <ScrollView testID="NewGroupScreen" style={FULL}>
+      <ScrollView testID="GroupDetailsScreen" style={FULL}>
         <TouchableOpacity onPress={goBack}>
           <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
@@ -235,13 +246,21 @@ export const DetailsScreen: FC<StackScreenProps<TabNavigatorParamList, "details"
                 onPress={joinGroup}
               />
             )}
-            {isUserAdmin(authStore.userId) && (
+            {isUserAdmin(authStore.userId) ? (
               <Button
                 testID="next-screen-button"
                 style={BUTTON_DELETE}
                 textStyle={BUTTON_TEXT}
                 text="EXCLUIR GRUPO"
-                onPress={goBack}
+                onPress={deleteGroup}
+              />
+            ) : (
+              <Button
+                testID="next-screen-button"
+                style={BUTTON_DELETE}
+                textStyle={BUTTON_TEXT}
+                text="SAIR DO GRUPO"
+                onPress={leaveGroup}
               />
             )}
           </View>

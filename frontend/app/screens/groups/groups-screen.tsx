@@ -127,7 +127,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
                 style={GROUP_ITEM}
                 key={group.id}
                 onPress={() => {
-                  navigation.navigate("details", { groupId: group.id })
+                  navigation.navigate("group_details", { groupId: group.id })
                 }}
               >
                 <Icon icon="bug" style={IMAGE} />
@@ -145,7 +145,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
         ) : (
           <View style={GROUP_EMPTY}>
             <Text style={GROUP_EMPTY_TEXT}>
-              Você não está participando em um grupo ainda. Por quê não criar um agora?
+              Você não está participando de um grupo ainda. Por que não criar um agora?
             </Text>
           </View>
         )}
@@ -153,10 +153,10 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
         <TouchableOpacity
           style={ADD_BUTTON}
           onPress={() => {
-            navigation.navigate("newgroup")
+            navigation.navigate("group_creation")
           }}
         >
-          <Icons size={60} name="add-box" color={color.primary} />
+          <Icons size={80} name="add-box" color={color.primary} />
         </TouchableOpacity>
       </View>
     )

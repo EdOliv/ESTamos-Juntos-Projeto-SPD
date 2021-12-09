@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react"
+import React, { FC, useRef, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
@@ -10,10 +10,12 @@ import {
   TextField,
   Icon
 } from "../../components"
-// import { useStores } from "../../models"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons" 
+
+import { useStores } from "../../models"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -83,18 +85,32 @@ const FOOTER_CONTENT: ViewStyle = {
 }
 
 
-export const EditProfileScreen: FC<BottomTabNavigationProp<TabNavigatorParamList, "editprofile">> = observer(() => {
+export const ProfileEditScreen: FC<
+BottomTabNavigationProp<TabNavigatorParamList, "profile">
+> = observer(() => {
+  
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+
   const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+  const { userStore } = useStores()
+
+  const [name, setName] = useState(userStore.userData ? userStore.userData.username : "--")
+  const [email, setEmail] = useState(userStore.userData ? userStore.userData.email : "--")
   const [password, setPassword] = useState("")
   const [firmPassword, setFirmPassword] = useState("")
 
   const emailTextInput = useRef(null)
   const passwordTextInput = useRef(null)
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log("FETCH_DATA")
+      await userStore.getAccountData()
+    }
+    fetchData()
+  }, [])
 
   const goBack = () => {
     navigation.navigate("profile")
