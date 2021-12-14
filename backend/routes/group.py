@@ -175,7 +175,7 @@ def update():
                                                    overwrite=True,
                                                    resource_type="image")
       image_url = images_response['url']
-      Group.update(new_group, image_url=image_url)
+      Group.update(new_group, picture_url=image_url)
 
     group = schema.dump(old_group, many=False)
     return jsonify(group=group), 200
