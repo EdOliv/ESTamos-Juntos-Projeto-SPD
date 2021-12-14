@@ -90,7 +90,7 @@ class User(db.Model):
   @staticmethod
   def update(user: "User", name: str, email: str,
              username: str, password: str,
-             profile_picture_url: str, phone: str,
+             profile_picture_url: str = None, phone: str = None,
              commit: bool = True) -> "User":
     try:
       user.name = name or user.name

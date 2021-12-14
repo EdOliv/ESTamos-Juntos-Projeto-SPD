@@ -89,11 +89,11 @@ class Group(db.Model):
 
   @staticmethod
   def update(group: "Group", name: str,
-             picture_url: str, description: str,
-             start_lat: float, start_lng: float, start_name: str,
-             destination_lat: float, destination_lng: float, destination_name: str,
-             is_visible: bool, is_open: bool,
-             group_type: str,
+             picture_url: str = None, description: str = None,
+             start_lat: float = None, start_lng: float = None, start_name: str = None,
+             destination_lat: float = None, destination_lng: float = None, destination_name: str = None,
+             is_visible: bool = None, is_open: bool = None,
+             group_type: str = None,
              commit: bool = True) -> "Group":
     try:
       group.name = name or group.name
