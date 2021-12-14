@@ -1,6 +1,8 @@
 from models.database import ma
 from models.user_group import UserGroup
 
+from marshmallow import fields
+
 
 class UserGroupSchema(ma.SQLAlchemySchema):
   class Meta:
@@ -12,4 +14,4 @@ class UserGroupSchema(ma.SQLAlchemySchema):
   join_date = ma.auto_field(dump_only=True)
   is_admin = ma.auto_field(required=True)
   group = ma.auto_field(required=True)
-  user = ma.auto_field(required=True)
+  user = fields.Nested('UserSchema')
