@@ -45,7 +45,8 @@ def update():
     if not User.update(old_user,
                        name=new_user.name,
                        email=new_user.email,
-                       phone=new_user.phone
+                       phone=new_user.phone,
+                       password=user_data["password"]
                        ):
 
       return jsonify(message="An error occurred while updating user"), 400
@@ -56,8 +57,8 @@ def update():
         file.write(base64.decodebytes(user_data['image'].encode()))
 
       images_response = cloudinary.uploader.upload("temp_image.png",
-                                                   folder="estamos_juntos/groups/",
-                                                   public_id=user_data.id,
+                                                   folder="estamos_juntos/users/",
+                                                   public_id=new_user.id,
                                                    overwrite=True,
                                                    resource_type="image")
       image_url = images_response['url']

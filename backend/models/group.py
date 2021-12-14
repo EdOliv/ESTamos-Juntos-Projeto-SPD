@@ -11,7 +11,7 @@ class Group(db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   name = db.Column(db.String(128), unique=False, nullable=False)
 
-  picture_url = db.Column(db.String(128), nullable=True)
+  picture_url = db.Column(db.String(256), nullable=True)
   description = db.Column(db.String(256), nullable=True)
 
   start_lat = db.Column(db.Float(), nullable=True)

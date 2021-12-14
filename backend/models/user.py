@@ -15,7 +15,7 @@ class User(db.Model):
                         unique=False, nullable=False)
 
   phone = db.Column(db.String(100), nullable=True)
-  profile_picture_url = db.Column(db.String(100), nullable=True)
+  profile_picture_url = db.Column(db.String(256), nullable=True)
 
   joined_groups = db.relationship(
       "UserGroup", cascade="all,delete", back_populates="user")
@@ -96,9 +96,10 @@ class User(db.Model):
       user.name = name or user.name
       user.email = email or user.email
       user.username = username or user.username
-      user.password = password or user.password
       user.phone = phone or user.phone
       user.profile_picture_url = profile_picture_url or user.profile_picture_url
+      if password:
+        user.password = password
 
       if commit:
         db.session.commit()
