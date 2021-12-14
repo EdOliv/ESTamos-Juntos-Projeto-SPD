@@ -1,13 +1,16 @@
-from marshmallow.decorators import post_load
 from models.database import ma
 from models.user import User
-from marshmallow import fields, validates, ValidationError, validate
+
+from marshmallow.decorators import post_load
+from marshmallow import fields, validates, ValidationError, validate, EXCLUDE
+
 import re
 
 
 class UserSchema(ma.SQLAlchemySchema):
   class Meta:
     model = User
+    unknown = EXCLUDE
 
   id = ma.auto_field(dump_only=True)
   name = ma.auto_field(required=True)
