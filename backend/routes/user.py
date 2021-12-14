@@ -6,6 +6,9 @@ from marshmallow import ValidationError
 from models.user import User
 from schemas.user_schema import UserSchema
 
+from extensions.image_server import cloudinary
+import base64
+
 user = Blueprint('user', __name__)
 ROUTE_PREFIX = "/user"
 
@@ -46,6 +49,19 @@ def update():
                        ):
 
       return jsonify(message="An error occurred while updating user"), 400
+
+    image = user_data['image']
+    if image:
+      with open('temp_image.png', "wb") as file:
+        file.write(base64.decodebytes(user_data['image'].encode()))
+
+      images_response = cloudinary.uploader.upload("temp_image.png",
+                                                   folder="estamos_juntos/groups/",
+                                                   public_id=user_data.id,
+                                                   overwrite=True,
+                                                   resource_type="image")
+      image_url = images_response['url']
+      User.update(user_data, image_url=image_url)
     user = schema.dump(old_user, many=False)
     return jsonify(user=user), 200
   except ValidationError as e:

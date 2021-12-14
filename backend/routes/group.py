@@ -12,6 +12,9 @@ from models.user_group import UserGroup
 from schemas.group_schema import GroupSchema
 from schemas.user_group_schema import UserGroupSchema
 
+from extensions.image_server import cloudinary
+import base64
+
 group = Blueprint('group', __name__)
 ROUTE_PREFIX = "/group"
 
@@ -112,6 +115,19 @@ def create():
     if not res:
       return jsonify({"message": "An error occurred while creating group"}), 400
 
+    image = group_data['image']
+    if image:
+      with open('temp_image.png', "wb") as file:
+        file.write(base64.decodebytes(group_data['image'].encode()))
+
+      images_response = cloudinary.uploader.upload("temp_image.png",
+                                                   folder="estamos_juntos/groups/",
+                                                   public_id=new_group.id,
+                                                   overwrite=True,
+                                                   resource_type="image")
+      image_url = images_response['url']
+      Group.update(new_group, image_url=image_url)
+
     new_group = group_schema.dump(new_group, many=False)
     return jsonify(group=new_group), 200
   except Exception as e:
@@ -148,6 +164,20 @@ def update():
                         ):
 
       return jsonify(message="An error occurred while updating group"), 400
+
+    image = group_data['image']
+    if image:
+      with open('temp_image.png', "wb") as file:
+        file.write(base64.decodebytes(group_data['image'].encode()))
+
+      images_response = cloudinary.uploader.upload("temp_image.png",
+                                                   folder="estamos_juntos/groups/",
+                                                   public_id=new_group.id,
+                                                   overwrite=True,
+                                                   resource_type="image")
+      image_url = images_response['url']
+      Group.update(new_group, image_url=image_url)
+
     group = schema.dump(old_group, many=False)
     return jsonify(group=group), 200
   except ValidationError as e:
