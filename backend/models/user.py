@@ -88,8 +88,8 @@ class User(db.Model):
       return False
 
   @staticmethod
-  def update(user: "User", name: str, email: str,
-             username: str, password: str,
+  def update(user: "User", name: str = None, email: str = None,
+             username: str = None, password: str = None,
              profile_picture_url: str = None, phone: str = None,
              commit: bool = True) -> "User":
     try:

@@ -88,7 +88,7 @@ class Group(db.Model):
       return False
 
   @staticmethod
-  def update(group: "Group", name: str,
+  def update(group: "Group", name: str = None,
              picture_url: str = None, description: str = None,
              start_lat: float = None, start_lng: float = None, start_name: str = None,
              destination_lat: float = None, destination_lng: float = None, destination_name: str = None,
