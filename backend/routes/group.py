@@ -126,7 +126,7 @@ def create():
                                                    overwrite=True,
                                                    resource_type="image")
       image_url = images_response['url']
-      Group.update(new_group, picture_url=image_url)
+      res = Group.update(new_group, picture_url=image_url)
 
     new_group = group_schema.dump(new_group, many=False)
     return jsonify(group=new_group), 200
@@ -175,7 +175,7 @@ def update():
                                                    overwrite=True,
                                                    resource_type="image")
       image_url = images_response['url']
-      Group.update(new_group, picture_url=image_url)
+      res = Group.update(old_group, picture_url=image_url)
 
     group = schema.dump(new_group, many=False)
     return jsonify(group=group), 200
