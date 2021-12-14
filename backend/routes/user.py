@@ -62,7 +62,7 @@ def update():
                                                    resource_type="image")
       image_url = images_response['url']
       User.update(user_data, profile_picture_url=image_url)
-    user = schema.dump(old_user, many=False)
+    user = schema.dump(new_user, many=False)
     return jsonify(user=user), 200
   except ValidationError as e:
     print(e)

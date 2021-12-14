@@ -177,7 +177,7 @@ def update():
       image_url = images_response['url']
       Group.update(new_group, picture_url=image_url)
 
-    group = schema.dump(old_group, many=False)
+    group = schema.dump(new_group, many=False)
     return jsonify(group=group), 200
   except ValidationError as e:
     print(e)
