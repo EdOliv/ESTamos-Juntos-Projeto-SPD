@@ -25,6 +25,7 @@ export const GroupStoreModel = types
       destinationName: string,
       meetingTime: string,
       description: string,
+      image: any|null
     ) => {
       const groupApi = new GroupApi(self.environment.api)
       const result = await groupApi.createGroup(
@@ -34,6 +35,37 @@ export const GroupStoreModel = types
         destinationName,
         meetingTime,
         description,
+        image
+      )
+
+      if (result.kind === "ok") {
+        // self.saveGroups(result.group)
+        return result.group;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null;
+      }
+    },
+    updateGroup: async (
+      id: number,
+      name: string,
+      groupType: string,
+      startName: string,
+      destinationName: string,
+      meetingTime: string,
+      description: string,
+      image: any|null
+    ) => {
+      const groupApi = new GroupApi(self.environment.api)
+      const result = await groupApi.updateGroup(
+        id,
+        name,
+        groupType,
+        startName,
+        destinationName,
+        meetingTime,
+        description,
+        image
       )
 
       if (result.kind === "ok") {

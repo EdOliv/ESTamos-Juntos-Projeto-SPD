@@ -23,6 +23,7 @@ export class GroupApi {
     destinationName: string,
     meetingTime: string,
     description: string,
+    image: any|null
   ): Promise<CreateGroupResult> {
     try {
       // make the api call
@@ -33,6 +34,7 @@ export class GroupApi {
         destination_name: destinationName,
         meeting_time: meetingTime,
         description: description,
+        image
       })
 
       // the typical ways to die when calling an api
@@ -49,6 +51,55 @@ export class GroupApi {
         destinationName: response.data.group.destination_name,
         meetingTime: response.data.group.meeting_time,
         description: response.data.group.description,
+        pictureUrl: response.data.group.picture_url,
+        usersCount: response.data.group.users_count,
+      }
+
+      return { kind: "ok", group }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async updateGroup(
+    id: number,
+    name: string,
+    groupType: string,
+    startName: string,
+    destinationName: string,
+    meetingTime: string,
+    description: string,
+    image: any|null
+  ): Promise<CreateGroupResult> {
+    try {
+      // make the api call
+      const response: ApiResponse<any> = await this.api.apisauce.put("group/update", {
+        id,
+        name,
+        group_type: groupType,
+        start_name: startName,
+        destination_name: destinationName,
+        meeting_time: meetingTime,
+        description: description,
+        image
+      })
+
+      // the typical ways to die when calling an api
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+
+      const group = {
+        id: response.data.group.id,
+        name: response.data.group.name,
+        groupType: response.data.group.group_type,
+        startName: response.data.group.start_name,
+        destinationName: response.data.group.destination_name,
+        meetingTime: response.data.group.meeting_time,
+        description: response.data.group.description,
+        pictureUrl: response.data.group.picture_url,
         usersCount: response.data.group.users_count,
       }
 
@@ -78,6 +129,7 @@ export class GroupApi {
         destinationName: response.data.group.destination_name,
         meetingTime: response.data.group.meeting_time,
         description: response.data.group.description,
+        pictureUrl: response.data.group.picture_url,
         usersCount: response.data.group.users_count,
       }
 
@@ -133,6 +185,7 @@ export class GroupApi {
       }
 
       const groups = response.data.groups.map((group) => {
+        console.log(group)
         return {
           id: group.id,
           name: group.name,
@@ -140,6 +193,7 @@ export class GroupApi {
           destinationName: group.destination_name,
           meetingTime: group.meeting_time,
           usersCount: group.users_count,
+          pictureUrl: group.picture_url,
         }
       })
 
@@ -203,6 +257,7 @@ export class GroupApi {
         destinationName: response.data.group.destination_name,
         meetingTime: response.data.group.meeting_time,
         description: response.data.group.description,
+        pictureUrl: response.data.group.picture_url,
         usersCount: response.data.group.users_count,
       }
 

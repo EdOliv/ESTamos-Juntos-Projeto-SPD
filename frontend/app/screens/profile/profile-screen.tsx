@@ -1,10 +1,10 @@
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, ImageStyle } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 
-import { Button, Text, Icon } from "../../components"
+import { Button, Text, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
@@ -36,10 +36,11 @@ const TITLE: TextStyle = {
 }
 
 const IMAGE: ImageStyle = {
-  width: 120,
-  height: 120,
+  width: 128,
+  height: 128,
   alignSelf: "center",
   marginTop: spacing[7],
+  borderRadius: spacing[8]
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -83,12 +84,17 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
   const username = userStore.userData ? userStore.userData.username : "--";
   const email = userStore.userData ? userStore.userData.email : "--";
 
+  const [userImage, setUserImage] = useState(null);
+
   const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
+  
+  const defaultImage = require("../../../assets/images/user.png")
 
   useEffect(() => {
     async function fetchData() {
       console.log("FETCH_DATA")
-      await userStore.getAccountData()
+      const result = await userStore.getAccountData();
+      setUserImage(result.userData.profilePictureUrl);
     }
     fetchData()
   }, [])
@@ -103,7 +109,12 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
       <Text style={TITLE} preset="header" text="Perfil" />
 
       <ScrollView style={CONTAINER}>
-        <Icon icon="bug" style={IMAGE} />
+        <AutoImage
+          style={IMAGE}
+          source={
+            (userImage && { uri: userImage }) || defaultImage
+          }
+        />
 
         <Text style={FIELD_TITLE}>Seu nome</Text>
         <Text style={FIELD_TEXT}>{ username }</Text>

@@ -1,27 +1,31 @@
 import React, { FC, useRef, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  ImageStyle,
+  Alert,
+} from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 
-import {
-  Button,
-  Text,
-  TextField,
-  Icon
-} from "../../components"
+import { Button, Text, TextField, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons" 
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { useStores } from "../../models"
-
+import { openImagePickerAsync } from "../../utils/image-picker"
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
 
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  alignContent: 'stretch'
+  alignContent: "stretch",
 }
 
 const CONTAINER: ViewStyle = {
@@ -34,11 +38,21 @@ const TEXT: TextStyle = {
   fontFamily: typography.primary,
 }
 
+const IMAGE_CONTAINER: ImageStyle = {
+  flexDirection: "column",
+  alignItems: "center",
+}
+
 const IMAGE: ImageStyle = {
-  width: 100,
-  height: 100,
+  width: 128,
+  height: 128,
   alignSelf: "center",
   marginTop: spacing[3],
+  borderRadius: spacing[8]
+}
+
+const IMAGE_BUTTON = {
+  padding: spacing[3],
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -73,11 +87,9 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-
 export const ProfileEditScreen: FC<
-BottomTabNavigationProp<TabNavigatorParamList, "profile">
+  BottomTabNavigationProp<TabNavigatorParamList, "profile">
 > = observer(() => {
-  
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
@@ -90,18 +102,47 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
   const [password, setPassword] = useState("")
   const [firmPassword, setFirmPassword] = useState("")
 
+  const [userImage, setUserImage] = useState(null)
+
+  const defaultImage = require("../../../assets/images/user.png")
+
+  const [selectedImage, setSelectedImage] = useState<any | null>(null)
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null)
+
   const emailTextInput = useRef(null)
   const passwordTextInput = useRef(null)
 
   useEffect(() => {
     async function fetchData() {
       console.log("FETCH_DATA")
-      await userStore.getAccountData()
+      const result = await userStore.getAccountData()
+      setUserImage(result.userData.profilePictureUrl)
     }
     fetchData()
   }, [])
 
   const goBack = () => {
+    navigation.navigate("profile")
+  }
+
+  const onImageSelect = async () => {
+    const pickerResult = await openImagePickerAsync()
+    if (!pickerResult.cancelled) {
+      setSelectedImage(pickerResult)
+      const { uri } = pickerResult as ImageInfo
+      setSelectedImageUri(uri)
+    }
+  }
+
+  const saveProfile = async () => {
+    console.log("EDIT_GROUP")
+
+    const image = selectedImage?.base64
+    const res = await userStore.updateUser(name, name, email, password, image)
+    if (!res) {
+      Alert.alert("Error", "User could not be updated")
+      return
+    }
     navigation.navigate("profile")
   }
 
@@ -112,14 +153,25 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
   // Pull in navigation via hook
   return (
     <ScrollView testID="ProfileScreen" style={FULL}>
-
       <TouchableOpacity onPress={goBack}>
-        <Icons size={35} name='keyboard-return' color={color.primary} />
+        <Icons size={35} name="keyboard-return" color={color.primary} />
       </TouchableOpacity>
 
       <View style={CONTAINER}>
-        <Icon icon="bug" style={IMAGE} />
-        
+        <View style={IMAGE_CONTAINER}>
+          <AutoImage
+            style={IMAGE}
+            source={
+              (selectedImageUri && { uri: selectedImageUri }) ||
+              (userImage && { uri: userImage }) ||
+              defaultImage
+            }
+          />
+          <TouchableOpacity style={IMAGE_BUTTON} onPress={onImageSelect}>
+            <Text>Selecionar Foto</Text>
+          </TouchableOpacity>
+        </View>
+
         <Text style={FIELD_TITLE}>Novo nome</Text>
         <TextField
           value={name}
@@ -164,7 +216,7 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
             style={BUTTON_SAVE}
             textStyle={BUTTON_TEXT}
             text="SALVAR ALTERAÇÕES"
-            onPress={goBack}
+            onPress={saveProfile}
           />
           <Button
             testID="next-screen-button"
@@ -175,7 +227,6 @@ BottomTabNavigationProp<TabNavigatorParamList, "profile">
           />
         </View>
       </View>
-        
     </ScrollView>
   )
 })

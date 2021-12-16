@@ -11,6 +11,7 @@ export const GroupModel = types.model("Group").props({
   destinationName: types.maybeNull(types.string),
   meetingTime: types.maybeNull(types.string),
   description: types.maybeNull(types.string),
+  pictureUrl: types.maybeNull(types.string),
   usersCount: types.maybeNull(types.number),
 })
 

@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
 
-import { Text, TextField, Icon } from "../../components"
+import { Text, TextField, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
@@ -68,6 +68,7 @@ const IMAGE: ImageStyle = {
   height: 80,
   marginRight: spacing[5],
   marginLeft: spacing[3],
+  borderRadius: 10,
 }
 
 const GROUP_ITEM: ViewStyle = {
@@ -119,6 +120,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
           destinationName: "Parada do shopping ABC",
           meetingTime: "08:00",
           usersCount: 5,
+          pictureUrl: null,
         },
         {
           id: 2,
@@ -126,6 +128,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
           destinationName: "Parada do shopping DEF",
           meetingTime: "12:00",
           usersCount: 5,
+          pictureUrl: null,
         },
         {
           id: 3,
@@ -133,6 +136,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
           destinationName: "Parada do shopping GHI",
           meetingTime: "18:00",
           usersCount: 5,
+          pictureUrl: null,
         },
       ])
     }, [])
@@ -177,7 +181,13 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
               }}
             >
               <View style={GROUP_ITEM}>
-                <Icon icon="bug" style={IMAGE} />
+                <AutoImage
+                  style={IMAGE}
+                  source={
+                    (group.image && { uri: group.image }) ||
+                    require("../../../assets/images/crowd.png")
+                  }
+                />
                 <View style={FULL}>
                   <Text style={GROUP_NAME}>{group.name}</Text>
                   <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>

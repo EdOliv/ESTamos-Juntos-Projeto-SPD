@@ -3,8 +3,7 @@ import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import { Text, Icon } from "../../components"
-// import { useStores } from "../../models"
+import { Text, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
@@ -41,6 +40,7 @@ const IMAGE: ImageStyle = {
   height: 80,
   marginRight: spacing[5],
   marginLeft: spacing[3],
+  borderRadius: 10,
 }
 
 const GROUP_EMPTY: ViewStyle = {
@@ -104,11 +104,13 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
 
     const [groups, setGroups] = useState([])
 
+    const defaultImage = require("../../../assets/images/crowd.png")
+
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", async () => {
+        console.log("LOADING GROUPS")
         const loadGroups = async () => {
           const newGroups = await groupStore.getUserGroups()
-          console.log(newGroups)
           setGroups(newGroups)
         }
         loadGroups()
@@ -131,7 +133,12 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
                   navigation.navigate("group_details", { groupId: group.id })
                 }}
               >
-                <Icon icon="bug" style={IMAGE} />
+                <AutoImage
+                  style={IMAGE}
+                  source={
+                    (group.image && { uri: group.image }) || defaultImage
+                  }
+                />
                 <View style={FULL}>
                   <Text style={GROUP_NAME}>{group.name}</Text>
                   <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>

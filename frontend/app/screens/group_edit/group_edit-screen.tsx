@@ -1,13 +1,15 @@
 import React, { FC, useEffect, useState, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
-import { Text, Icon, TextField, Button } from "../../components"
+import { Text, TextField, Button, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
+import { openImagePickerAsync } from "../../utils/image-picker"
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
 
 
 const FULL: ViewStyle = {
@@ -28,11 +30,21 @@ const TEXT: TextStyle = {
   fontFamily: typography.primary,
 }
 
+const IMAGE_CONTAINER: ImageStyle = {
+  flexDirection: "column",
+  alignItems: "center",
+}
+
 const IMAGE: ImageStyle = {
   width: 100,
   height: 100,
   alignSelf: "center",
   marginTop: spacing[3],
+  borderRadius: 10
+}
+
+const IMAGE_BUTTON = {
+  padding: spacing[3],
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -82,6 +94,11 @@ TabNavigatorParamList, "group_edit">> = observer(
     const [hour, setHour] = useState("")
     const [details, setDetails] = useState("")
 
+    const [selectedImage, setSelectedImage] = useState<any | null>(null)
+    const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null)
+    
+    const defaultGroupImage = require("../../../assets/images/crowd.png")
+
     useEffect(() => {
       const loadGroup = async () => {
         const editGroup = await groupStore.getGroupData(route.params.groupId)
@@ -100,7 +117,24 @@ TabNavigatorParamList, "group_edit">> = observer(
       navigation.navigate("group_details", { groupId: id })
     }
 
-    const saveGroup = () => {
+    const onImageSelect = async () => {
+      const pickerResult = await openImagePickerAsync();
+      if (!pickerResult.cancelled) {
+        setSelectedImage(pickerResult)
+        const { uri } = pickerResult as ImageInfo
+        setSelectedImageUri(uri)
+      }
+    }
+
+    const saveGroup = async () => {
+      console.log("EDIT_GROUP")
+  
+      const image = selectedImage?.base64
+      const res = await groupStore.updateGroup(id, name, type, meeting, destination, hour, details, image)
+      if (!res) {
+        Alert.alert("Error", "Group could not be updated");
+        return ;
+      }
       navigation.navigate("group_details", { groupId: id })
     }
 
@@ -121,7 +155,18 @@ TabNavigatorParamList, "group_edit">> = observer(
         </TouchableOpacity>
 
         <View style={CONTAINER}>
-          <Icon icon="bug" style={IMAGE} />
+          <View style={IMAGE_CONTAINER}>
+            <AutoImage
+              style={IMAGE}
+              source={
+                (selectedImageUri && { uri: selectedImageUri }) ||
+                defaultGroupImage
+              }
+            />
+            <TouchableOpacity style={IMAGE_BUTTON} onPress={onImageSelect}>
+              <Text>Selecionar Foto</Text>
+            </TouchableOpacity>
+          </View>
 
           <Text style={FIELD_TITLE}>Tipo do grupo</Text>
           <TextField

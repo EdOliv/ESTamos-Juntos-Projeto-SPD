@@ -26,10 +26,35 @@ export const UserStoreModel = types
 
       if (result.kind === "ok") {
         self.saveUserData(result.userData)
+        return result;
       } else {
         __DEV__ && console.tron.log(result.kind)
+        return null;
       }
-    }
+    },
+    updateUser: async (
+      name: string,
+      username: string,
+      email: string,
+      password: string,
+      image: any|null
+    ) => {
+      const userApi = new UserApi(self.environment.api)
+      const result = await userApi.updateUser(
+        name,
+        username,
+        email,
+        password,
+        image
+      )
+
+      if (result.kind === "ok") {
+        return result.userData;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null;
+      }
+    },
   }))
 
 type UserStoreType = Instance<typeof UserStoreModel>
