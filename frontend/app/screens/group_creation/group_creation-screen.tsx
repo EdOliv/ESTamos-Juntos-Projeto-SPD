@@ -1,6 +1,6 @@
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Picker } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
 
@@ -10,6 +10,9 @@ import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
+
+import { groupTypes, busStop, district, hours, minutes } from '../group_creation/picker-data'
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -44,6 +47,7 @@ const IMAGE: ImageStyle = {
 
 const IMAGE_BUTTON = {
   padding: spacing[3],
+  fontFamily: typography.bold,
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -66,17 +70,70 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
+const PICKER_CONTAINER: ViewStyle = {
+  minHeight: 44,
+  paddingHorizontal: spacing[2],
+  borderRadius: 10,
+  marginTop: spacing[3],
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  justifyContent: "center",
+}
+
+const PICKER_FIELD: TextStyle = {
+  ...TEXT,
+  borderRadius: 10,
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  color: color.text,
+}
+
+const TIME_PICKER_CONTAINER: TextStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  color: color.text,
+}
+
+const TIME_PICKER_ITEM: TextStyle = {
+  minHeight: 44,
+  paddingHorizontal: spacing[2],
+  marginRight: spacing[4],
+  borderRadius: 10,
+  marginTop: spacing[3],
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  justifyContent: "center",
+  width: 70,
+  color: color.text,
+}
+
+const TIME_PICKER: TextStyle = {
+  ...TEXT,
+  borderRadius: 10,
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  color: color.text,
+}
+
+const TIME_PICKER_SEPARATOR: TextStyle = {
+  ...TEXT,
+  marginRight: spacing[4],
+  fontSize: 26,
+}
+
+
 export const GroupCreationScreen: FC<
   StackScreenProps<TabNavigatorParamList, "group_creation">
 > = observer(({ navigation }) => {
   // Pull in one of our MST stores
   const { groupStore } = useStores()
 
-  const [type, setType] = useState("") // "caminhada" or "carona"
+  const [type, setType] = useState(groupTypes[0]) // "caminhada" or "carona"
   const [name, setName] = useState("")
   const [meeting, setMeeting] = useState("")
-  const [destination, setDestination] = useState("")
-  const [hour, setHour] = useState("")
+  const [destination, setDestination] = useState(busStop[0])
+  const [hour, setHour] = useState(hours[0])
+  const [min, setMin] = useState(minutes[0])
   const [details, setDetails] = useState("")
 
   const [selectedImage, setSelectedImage] = useState<any | null>(null)
@@ -85,10 +142,18 @@ export const GroupCreationScreen: FC<
   const nameTextInput = useRef(null)
   const meetingTextInput = useRef(null)
   const destinationTextInput = useRef(null)
-  const hourTextInput = useRef(null)
   const detailsTextInput = useRef(null)
   
   const defaultImage = require("../../../assets/images/crowd.png")
+
+  const changeType = (value) => {
+    setType(value)
+    if (value === groupTypes[0]) {
+      setDestination(busStop[0])
+    } else {
+      setDestination(district[0])
+    }
+  }
 
   const goBack = () => {
     navigation.navigate("groups")
@@ -107,7 +172,7 @@ export const GroupCreationScreen: FC<
     console.log("CREATE_GROUP")
 
     const image = selectedImage?.base64
-    const res = await groupStore.createGroup(name, type, meeting, destination, hour, details, image)
+    const res = await groupStore.createGroup(name, type, meeting, destination, hour+":"+min, details, image)
     console.log(res)
     navigation.navigate("groups")
   }
@@ -127,21 +192,25 @@ export const GroupCreationScreen: FC<
               defaultImage
             }
           />
-          <TouchableOpacity style={IMAGE_BUTTON} onPress={onImageSelect}>
-            <Text>Selecionar Foto</Text>
+          <TouchableOpacity onPress={onImageSelect}>
+            <Text style={IMAGE_BUTTON}>Selecionar foto</Text>
           </TouchableOpacity>
         </View>
 
         <Text style={FIELD_TITLE}>Tipo do grupo</Text>
-        <TextField
-          value={type}
-          onChangeText={setType}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            nameTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-        />
+        <View style={PICKER_CONTAINER}>
+          <Picker
+            style={PICKER_FIELD}
+            selectedValue={type}
+            onValueChange={changeType}
+          >
+            {
+              groupTypes.map(groupTypes =>
+                <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
+              )
+            }
+          </Picker>
+        </View>
 
         <Text style={FIELD_TITLE}>Nome do grupo</Text>
         <TextField
@@ -168,29 +237,65 @@ export const GroupCreationScreen: FC<
         />
 
         <Text style={FIELD_TITLE}>Destino</Text>
-        <TextField
-          value={destination}
-          onChangeText={setDestination}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            hourTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-          forwardedRef={destinationTextInput}
-        />
+        <View style={PICKER_CONTAINER}>
+          {type === groupTypes[0] ? (
+            <Picker
+              style={PICKER_FIELD}
+              selectedValue={destination}
+              onValueChange={setDestination}
+            >
+              {
+                busStop.map(busStop =>
+                  <Picker.Item key={busStop} label={busStop} value={busStop}/>
+                )
+              }
+            </Picker>
+          ) : (
+            <Picker
+              style={PICKER_FIELD}
+              selectedValue={destination}
+              onValueChange={setDestination}
+            >
+              {
+                district.map(district =>
+                  <Picker.Item key={district} label={district} value={district}/>
+                )
+              }
+            </Picker>
+          )}
+        </View>
 
         <Text style={FIELD_TITLE}>Horário de saída</Text>
-        <TextField
-          value={hour}
-          onChangeText={setHour}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            detailsTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-          forwardedRef={hourTextInput}
-        />
-
+        <View style={TIME_PICKER_CONTAINER}>
+          <View style={TIME_PICKER_ITEM}>
+            <Picker
+              style={TIME_PICKER}
+              selectedValue={hour}
+              onValueChange={setHour}
+            >
+              {
+                hours.map(hours =>
+                  <Picker.Item key={hours} label={hours} value={hours}/>
+                )
+              }
+            </Picker>
+          </View>
+          <Text style={TIME_PICKER_SEPARATOR}>:</Text>
+          <View style={TIME_PICKER_ITEM}>
+            <Picker
+              style={TIME_PICKER}
+              selectedValue={min}
+              onValueChange={setMin}
+            >
+              {
+                minutes.map(minutes =>
+                  <Picker.Item key={minutes} label={minutes} value={minutes}/>
+                )
+              }
+            </Picker>
+          </View>
+        </View>
+        
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <TextField
           value={details}

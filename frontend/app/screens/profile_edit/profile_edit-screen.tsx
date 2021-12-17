@@ -52,6 +52,7 @@ const IMAGE: ImageStyle = {
 }
 
 const IMAGE_BUTTON = {
+  fontFamily: typography.bold,
   padding: spacing[3],
 }
 
@@ -167,8 +168,8 @@ export const ProfileEditScreen: FC<
               defaultImage
             }
           />
-          <TouchableOpacity style={IMAGE_BUTTON} onPress={onImageSelect}>
-            <Text>Selecionar Foto</Text>
+          <TouchableOpacity onPress={onImageSelect}>
+            <Text style={IMAGE_BUTTON}>Selecionar foto</Text>
           </TouchableOpacity>
         </View>
 

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Alert } from "react-native"
+import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Alert, Picker } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Text, TextField, Button, AutoImage } from "../../components"
@@ -10,6 +10,8 @@ import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
+
+import { groupTypes, busStop, district, hours, minutes } from '../group_creation/picker-data'
 
 
 const FULL: ViewStyle = {
@@ -43,8 +45,9 @@ const IMAGE: ImageStyle = {
   borderRadius: 10
 }
 
-const IMAGE_BUTTON = {
+const IMAGE_BUTTON: TextStyle = {
   padding: spacing[3],
+  fontFamily: typography.bold,
 }
 
 const FIELD_TITLE: TextStyle = {
@@ -78,6 +81,57 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
+const PICKER_CONTAINER: ViewStyle = {
+  minHeight: 44,
+  paddingHorizontal: spacing[2],
+  borderRadius: 10,
+  marginTop: spacing[3],
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  justifyContent: "center",
+}
+
+const PICKER_FIELD: TextStyle = {
+  ...TEXT,
+  borderRadius: 10,
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  color: color.text,
+}
+
+const TIME_PICKER_CONTAINER: TextStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  color: color.text,
+}
+
+const TIME_PICKER_ITEM: TextStyle = {
+  minHeight: 44,
+  paddingHorizontal: spacing[2],
+  marginRight: spacing[4],
+  borderRadius: 10,
+  marginTop: spacing[3],
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  justifyContent: "center",
+  width: 70,
+  color: color.text,
+}
+
+const TIME_PICKER: TextStyle = {
+  ...TEXT,
+  borderRadius: 10,
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  color: color.text,
+}
+
+const TIME_PICKER_SEPARATOR: TextStyle = {
+  ...TEXT,
+  marginRight: spacing[4],
+  fontSize: 26,
+}
+
 
 export const GroupEditScreen: FC<StackScreenProps<
 TabNavigatorParamList, "group_edit">> = observer(
@@ -92,6 +146,7 @@ TabNavigatorParamList, "group_edit">> = observer(
     const [meeting, setMeeting] = useState("")
     const [destination, setDestination] = useState("")
     const [hour, setHour] = useState("")
+    const [min, setMin] = useState("")
     const [details, setDetails] = useState("")
 
     const [selectedImage, setSelectedImage] = useState<any | null>(null)
@@ -107,11 +162,21 @@ TabNavigatorParamList, "group_edit">> = observer(
         setName(editGroup.name)
         setMeeting(editGroup.startName)
         setDestination(editGroup.destinationName)
-        setHour(editGroup.meetingTime)
+        setHour(editGroup.meetingTime.substring(0, 2))
+        setMin(editGroup.meetingTime.substring(3, 5))
         setDetails(editGroup.description)
       }
       loadGroup()
     }, [])
+
+    const changeType = (value) => {
+      setType(value)
+      if (value === groupTypes[0]) {
+        setDestination(busStop[0])
+      } else {
+        setDestination(district[0])
+      }
+    }
 
     const goBack = () => {
       navigation.navigate("group_details", { groupId: id })
@@ -130,7 +195,8 @@ TabNavigatorParamList, "group_edit">> = observer(
       console.log("EDIT_GROUP")
   
       const image = selectedImage?.base64
-      const res = await groupStore.updateGroup(id, name, type, meeting, destination, hour, details, image)
+      const res = await groupStore.updateGroup(id, name, type, meeting, destination, hour+":"+min, details, image)
+      console.log(res)
       if (!res) {
         Alert.alert("Error", "Group could not be updated");
         return ;
@@ -145,7 +211,6 @@ TabNavigatorParamList, "group_edit">> = observer(
     const nameTextInput = useRef(null)
     const meetingTextInput = useRef(null)
     const destinationTextInput = useRef(null)
-    const hourTextInput = useRef(null)
     const detailsTextInput = useRef(null)
 
     return (
@@ -163,21 +228,25 @@ TabNavigatorParamList, "group_edit">> = observer(
                 defaultGroupImage
               }
             />
-            <TouchableOpacity style={IMAGE_BUTTON} onPress={onImageSelect}>
-              <Text>Selecionar Foto</Text>
+            <TouchableOpacity onPress={onImageSelect}>
+              <Text style={IMAGE_BUTTON}>Selecionar foto</Text>
             </TouchableOpacity>
           </View>
 
           <Text style={FIELD_TITLE}>Tipo do grupo</Text>
-          <TextField
-            value={type}
-            onChangeText={setType}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              nameTextInput.current.focus()
-            }}
-            blurOnSubmit={false}
-          />
+          <View style={PICKER_CONTAINER}>
+          <Picker
+            style={PICKER_FIELD}
+            selectedValue={type}
+            onValueChange={changeType}
+          >
+            {
+              groupTypes.map(groupTypes =>
+                <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
+              )
+            }
+          </Picker>
+        </View>
 
           <Text style={FIELD_TITLE}>Nome do grupo</Text>
           <TextField
@@ -204,28 +273,64 @@ TabNavigatorParamList, "group_edit">> = observer(
           />
 
           <Text style={FIELD_TITLE}>Destino</Text>
-          <TextField
-            value={destination}
-            onChangeText={setDestination}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              hourTextInput.current.focus()
-            }}
-            blurOnSubmit={false}
-            forwardedRef={meetingTextInput}
-          />
+          <View style={PICKER_CONTAINER}>
+          {type === groupTypes[0] ? (
+            <Picker
+              style={PICKER_FIELD}
+              selectedValue={destination}
+              onValueChange={setDestination}
+            >
+              {
+                busStop.map(busStop =>
+                  <Picker.Item key={busStop} label={busStop} value={busStop}/>
+                )
+              }
+            </Picker>
+          ) : (
+            <Picker
+              style={PICKER_FIELD}
+              selectedValue={destination}
+              onValueChange={setDestination}
+            >
+              {
+                district.map(district =>
+                  <Picker.Item key={district} label={district} value={district}/>
+                )
+              }
+            </Picker>
+          )}
+        </View>
 
-          <Text style={FIELD_TITLE}>Horário de saída</Text>
-          <TextField
-            value={hour}
-            onChangeText={setHour}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              detailsTextInput.current.focus()
-            }}
-            blurOnSubmit={false}
-            forwardedRef={hourTextInput}
-          />
+        <Text style={FIELD_TITLE}>Horário de saída</Text>
+        <View style={TIME_PICKER_CONTAINER}>
+          <View style={TIME_PICKER_ITEM}>
+            <Picker
+              style={TIME_PICKER}
+              selectedValue={hour}
+              onValueChange={setHour}
+            >
+              {
+                hours.map(hours =>
+                  <Picker.Item key={hours} label={hours} value={hours}/>
+                )
+              }
+            </Picker>
+          </View>
+          <Text style={TIME_PICKER_SEPARATOR}>:</Text>
+          <View style={TIME_PICKER_ITEM}>
+            <Picker
+              style={TIME_PICKER}
+              selectedValue={min}
+              onValueChange={setMin}
+            >
+              {
+                minutes.map(minutes =>
+                  <Picker.Item key={minutes} label={minutes} value={minutes}/>
+                )
+              }
+            </Picker>
+          </View>
+        </View>
 
           <Text style={FIELD_TITLE}>Outros detalhes</Text>
           <TextField

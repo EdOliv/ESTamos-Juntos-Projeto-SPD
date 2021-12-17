@@ -192,7 +192,7 @@ export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">>
                   <Text style={GROUP_NAME}>{group.name}</Text>
                   <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
                   <View style={GROUP_FOOTER}>
-                    <Text style={GROUP_FOOTER_TEXT}>{group.meetingTime}</Text>
+                    <Text style={GROUP_FOOTER_TEXT}>{group.meetingTime.substring(0, 5)}</Text>
                     <Text style={GROUP_FOOTER_TEXT}>{group.usersCount} pessoas</Text>
                   </View>
                 </View>

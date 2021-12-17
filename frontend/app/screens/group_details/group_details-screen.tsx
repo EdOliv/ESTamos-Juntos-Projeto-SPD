@@ -217,7 +217,7 @@ export const GroupDetailsScreen: FC<
         <Text style={FIELD_TEXT}>{group.destinationName}</Text>
 
         <Text style={FIELD_TITLE}>Horário de saída</Text>
-        <Text style={FIELD_TEXT}>{group.meetingTime}</Text>
+        <Text style={FIELD_TEXT}>{group.meetingTime.substring(0, 5)}</Text>
 
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
