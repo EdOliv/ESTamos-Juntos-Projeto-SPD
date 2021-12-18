@@ -1,17 +1,21 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle, 
+  ImageStyle,
+  TouchableOpacity, 
+  ScrollView, 
+  TextInput 
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ImageStyle, TouchableOpacity, ScrollView } from "react-native"
-
-import { Text, TextField, AutoImage } from "../../components"
-import { color, spacing, typography } from "../../theme"
-import { TabNavigatorParamList } from "../../navigators"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { StackScreenProps } from "@react-navigation/stack"
-import { useStores } from "../../models"
 
-// <TouchableOpacity style={FILTER_BUTTON}>
-// <Icons size={35} name='search' color={color.primary} />
-// </TouchableOpacity>
+import { Text, AutoImage } from "../../components"
+import { color, spacing, typography } from "../../theme"
+import { TabNavigatorParamList } from "../../navigators"
+import { useStores } from "../../models"
 
 
 const FULL: ViewStyle = {
@@ -40,18 +44,34 @@ const TITLE: TextStyle = {
   fontFamily: typography.bold,
 }
 
-const FIELD_TITLE: TextStyle = {
+const SEARCH_CONTAINER: ViewStyle = {
+  marginTop: spacing[6],
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  minHeight: 44,
+  backgroundColor: color.bar,
+  borderRadius: 10,
+  paddingEnd: spacing[2],
+}
+
+const SEARCH_BAR: TextStyle = {
   ...TEXT,
-  fontSize: 16,
-  marginTop: spacing[5],
-  fontFamily: typography.bold,
+  fontSize: 15,
+  minHeight: 50,
+  paddingHorizontal: spacing[4],
+  borderRadius: 10,
+  borderWidth: 0,
+  backgroundColor: color.bar,
+  justifyContent: "center",
+  flex: 1,
 }
 
 const FILTERS: ViewStyle = {
   flexDirection: "row",
   alignContent: "stretch",
   justifyContent: "flex-start",
-  marginTop: spacing[3],
+  marginTop: spacing[4],
   paddingBottom: spacing[5],
   borderBottomColor: color.primary,
   borderBottomWidth: 1,
@@ -103,65 +123,40 @@ const GROUP_FOOTER_TEXT: TextStyle = {
   fontSize: 12,
 }
 
-export const SearchScreen: FC<StackScreenProps<TabNavigatorParamList, "search">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
+
+export const SearchScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "search">> = observer(({ navigation }) => {
+    
     const { groupStore } = useStores()
 
     const [search, setSearch] = useState("")
 
     const [groups, setGroups] = useState([])
 
-    useEffect(() => {
-      setGroups([
-        {
-          id: 1,
-          name: "Grupo #1",
-          destinationName: "Parada do shopping ABC",
-          meetingTime: "08:00",
-          usersCount: 5,
-          pictureUrl: null,
-        },
-        {
-          id: 2,
-          name: "Grupo #2",
-          destinationName: "Parada do shopping DEF",
-          meetingTime: "12:00",
-          usersCount: 5,
-          pictureUrl: null,
-        },
-        {
-          id: 3,
-          name: "Grupo #3",
-          destinationName: "Parada do shopping GHI",
-          meetingTime: "18:00",
-          usersCount: 5,
-          pictureUrl: null,
-        },
-      ])
-    }, [])
-
     const searchGroups = async () => {
       const newGroups = await groupStore.searchGroups(search)
       setGroups(newGroups)
     }
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
     return (
       <View testID="SearchScreen" style={FULL}>
-        <Text style={TITLE} text="ESTamos juntos" />
+        <Text style={TITLE} preset="header" text="ESTamos juntos" />
 
         <ScrollView style={CONTAINER}>
-          <Text style={FIELD_TITLE}>Pesquisar por grupos</Text>
-          <TextField
-            value={search}
-            onChangeText={setSearch}
-            returnKeyType="go"
-            blurOnSubmit={false}
-            onSubmitEditing={searchGroups}
-            placeholder="Inserir termos de busca..."
-          />
+
+          <View style={SEARCH_CONTAINER}>
+            <TextInput
+              style={SEARCH_BAR}
+              onChangeText={setSearch}
+              returnKeyType="go"
+              blurOnSubmit={false}
+              onSubmitEditing={searchGroups}
+              placeholder="Pesquisar por grupos..."
+              placeholderTextColor={color.primary}
+            />
+            <Icons size={35} name="search" color={color.primary} />
+          </View>
+
           <View style={FILTERS}>
             <TouchableOpacity style={FILTER_BUTTON}>
               <Icons size={35} name="directions-walk" color={color.primary} />

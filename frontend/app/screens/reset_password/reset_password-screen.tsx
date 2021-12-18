@@ -1,12 +1,18 @@
 import React, { FC, useRef, useState } from "react"
+import {
+  View, 
+  ViewStyle, 
+  TextStyle, 
+  TouchableOpacity, 
+  ScrollView
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Button, Text, TextField } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { saveString } from "../../utils/storage"
 
@@ -73,12 +79,8 @@ const FOOTER_TEXT: TextStyle = {
 }
 
 
-export const ResetPasswordScreen: FC<
-StackScreenProps<NavigatorParamList, "reset_password">
-> = observer(
-
-	({ navigation }) => {
-    // Pull in one of our MST stores
+export const ResetPasswordScreen: FC<StackScreenProps<
+  NavigatorParamList, "reset_password">> = observer(({ navigation }) => {
 
     const [email, setEmail] = useState("")
 
@@ -95,7 +97,6 @@ StackScreenProps<NavigatorParamList, "reset_password">
 		const register = () => {
       navigation.navigate("register")
     }
-
     
     return (
       <ScrollView testID="ResetPasswordScreen" style={FULL}>

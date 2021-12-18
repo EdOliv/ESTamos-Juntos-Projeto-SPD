@@ -10,13 +10,14 @@ import {
   Alert,
 } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Text, Button, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { Group } from "../../models/group/group"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -120,10 +121,10 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const GroupDetailsScreen: FC<
-  StackScreenProps<TabNavigatorParamList, "group_details">
-> = observer(({ route, navigation }) => {
-  // Pull in one of our MST stores
+
+export const GroupDetailsScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "group_details">> = observer(({ route, navigation }) => {
+
   const { authStore, groupStore } = useStores()
 
   const [group, setGroup] = useState<Group | null>({
@@ -222,7 +223,7 @@ export const GroupDetailsScreen: FC<
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
 
-        <Text style={FIELD_TITLE}>Participantes</Text>
+        <Text style={FIELD_TITLE}>Pessoas</Text>
 
         {people.map((userGroup) => (
           <View key={userGroup.user.id} style={USER_ITEM}>
@@ -290,9 +291,8 @@ export const GroupDetailsScreen: FC<
             />
           )}
         </View>
+        
       </View>
     </ScrollView>
   )
 })
-
-// (ownProfile) : (() => {  navigation.navigate("profile_others", { groupUserId: userGroup.user.id })})}

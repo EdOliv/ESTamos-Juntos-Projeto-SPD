@@ -1,6 +1,12 @@
 import React, { FC, useEffect, useState } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ScrollView,
+  ImageStyle
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, ImageStyle } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 
@@ -75,63 +81,64 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const ProfileScreen: FC<
-BottomTabNavigationProp<TabNavigatorParamList, "profile">
-> = observer(() => {
 
-  // Pull in one of our MST stores
-  const { userStore } = useStores()
-  const username = userStore.userData ? userStore.userData.username : "--";
-  const email = userStore.userData ? userStore.userData.email : "--";
+export const ProfileScreen: FC<BottomTabNavigationProp<
+  TabNavigatorParamList, "profile">> = observer(() => {
 
-  const [userImage, setUserImage] = useState(null);
+    const { userStore } = useStores()
 
-  const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
-  
-  const defaultImage = require("../../../assets/images/user.png")
+    const username = userStore.userData ? userStore.userData.username : "--";
+    const email = userStore.userData ? userStore.userData.email : "--";
 
-  useEffect(() => {
-    async function fetchData() {
-      console.log("FETCH_DATA")
-      const result = await userStore.getAccountData();
-      setUserImage(result.userData.profilePictureUrl);
+    const [userImage, setUserImage] = useState(null);
+
+    const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
+    
+    const defaultImage = require("../../../assets/images/user.png")
+
+    useEffect(() => {
+      async function fetchData() {
+        console.log("FETCH_DATA")
+        const result = await userStore.getAccountData();
+        setUserImage(result.userData.profilePictureUrl);
+      }
+      fetchData()
+    }, [])
+
+    const editProfile = () => {
+      navigation.navigate("profile_edit")
     }
-    fetchData()
-  }, [])
 
-  const editProfile = () => {
-    navigation.navigate("profile_edit")
-  }
+    return (
+      <View testID="ProfileScreen" style={FULL}>
+        <Text style={TITLE} preset="header" text="Perfil" />
 
-  // Pull in navigation via hook
-  return (
-    <View testID="ProfileScreen" style={FULL}>
-      <Text style={TITLE} preset="header" text="Perfil" />
-
-      <ScrollView style={CONTAINER}>
-        <AutoImage
-          style={IMAGE}
-          source={
-            (userImage && { uri: userImage }) || defaultImage
-          }
-        />
-
-        <Text style={FIELD_TITLE}>Seu nome</Text>
-        <Text style={FIELD_TEXT}>{ username }</Text>
-
-        <Text style={FIELD_TITLE}>Seu e-mail</Text>
-        <Text style={FIELD_TEXT}>{ email }</Text>
-
-        <View style={FOOTER_CONTENT}>
-          <Button
-            testID="next-screen-button"
-            style={BUTTON_SAVE}
-            textStyle={BUTTON_TEXT}
-            text="EDITAR PERFIL"
-            onPress={editProfile}
+        <ScrollView style={CONTAINER}>
+          <AutoImage
+            style={IMAGE}
+            source={
+              (userImage && { uri: userImage }) || defaultImage
+            }
           />
-        </View>
-      </ScrollView>
-    </View>
-  )
-})
+
+          <Text style={FIELD_TITLE}>Seu nome</Text>
+          <Text style={FIELD_TEXT}>{ username }</Text>
+
+          <Text style={FIELD_TITLE}>Seu e-mail</Text>
+          <Text style={FIELD_TEXT}>{ email }</Text>
+
+          <View style={FOOTER_CONTENT}>
+            <Button
+              testID="next-screen-button"
+              style={BUTTON_SAVE}
+              textStyle={BUTTON_TEXT}
+              text="EDITAR PERFIL"
+              onPress={editProfile}
+            />
+          </View>
+        
+        </ScrollView>
+      </View>
+    )
+  }
+)

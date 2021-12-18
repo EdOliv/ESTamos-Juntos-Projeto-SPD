@@ -11,15 +11,15 @@ import {
 } from "react-native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Button, Text, TextField, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
-
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -88,146 +88,147 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const ProfileEditScreen: FC<
-  BottomTabNavigationProp<TabNavigatorParamList, "profile">
-> = observer(() => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
 
-  const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
+export const ProfileEditScreen: FC<BottomTabNavigationProp<
+  TabNavigatorParamList, "profile_edit">> = observer(() => {
 
-  const { userStore } = useStores()
+    const navigation = useNavigation<BottomTabNavigationProp<any, any>>()
 
-  const [name, setName] = useState(userStore.userData ? userStore.userData.username : "--")
-  const [email, setEmail] = useState(userStore.userData ? userStore.userData.email : "--")
-  const [password, setPassword] = useState("")
-  const [firmPassword, setFirmPassword] = useState("")
+    const { userStore } = useStores()
 
-  const [userImage, setUserImage] = useState(null)
+    const [name, setName] = useState(userStore.userData ? userStore.userData.username : "--")
+    const [email, setEmail] = useState(userStore.userData ? userStore.userData.email : "--")
+    const [password, setPassword] = useState("")
+    const [firmPassword, setFirmPassword] = useState("")
 
-  const defaultImage = require("../../../assets/images/user.png")
+    const [userImage, setUserImage] = useState(null)
 
-  const [selectedImage, setSelectedImage] = useState<any | null>(null)
-  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null)
+    const defaultImage = require("../../../assets/images/user.png")
 
-  const emailTextInput = useRef(null)
-  const passwordTextInput = useRef(null)
+    const [selectedImage, setSelectedImage] = useState<any | null>(null)
+    const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function fetchData() {
-      console.log("FETCH_DATA")
-      const result = await userStore.getAccountData()
-      setUserImage(result.userData.profilePictureUrl)
+    const emailTextInput = useRef(null)
+    const passwordTextInput = useRef(null)
+
+    useEffect(() => {
+      async function fetchData() {
+        console.log("FETCH_DATA")
+        const result = await userStore.getAccountData()
+        setUserImage(result.userData.profilePictureUrl)
+      }
+      fetchData()
+    }, [])
+
+    const goBack = () => {
+      navigation.navigate("profile")
     }
-    fetchData()
-  }, [])
 
-  const goBack = () => {
-    navigation.navigate("profile")
-  }
-
-  const onImageSelect = async () => {
-    const pickerResult = await openImagePickerAsync()
-    if (!pickerResult.cancelled) {
-      setSelectedImage(pickerResult)
-      const { uri } = pickerResult as ImageInfo
-      setSelectedImageUri(uri)
+    const onImageSelect = async () => {
+      const pickerResult = await openImagePickerAsync()
+      if (!pickerResult.cancelled) {
+        setSelectedImage(pickerResult)
+        const { uri } = pickerResult as ImageInfo
+        setSelectedImageUri(uri)
+      }
     }
-  }
 
-  const saveProfile = async () => {
-    console.log("EDIT_GROUP")
+    const saveProfile = async () => {
+      console.log("EDIT_GROUP")
 
-    const image = selectedImage?.base64
-    const res = await userStore.updateUser(name, name, email, password, image)
-    if (!res) {
-      Alert.alert("Error", "User could not be updated")
-      return
+      const image = selectedImage?.base64
+      const res = await userStore.updateUser(name, name, email, password, image)
+      if (!res) {
+        Alert.alert("Error", "User could not be updated")
+        return
+      }
+      navigation.navigate("profile")
     }
-    navigation.navigate("profile")
-  }
 
-  const logout = () => {
-    navigation.navigate("login")
-  }
+    const logout = () => {
+      navigation.navigate("login")
+    }
 
-  // Pull in navigation via hook
-  return (
-    <ScrollView testID="ProfileScreen" style={FULL}>
-      <TouchableOpacity onPress={goBack}>
-        <Icons size={35} name="keyboard-return" color={color.primary} />
-      </TouchableOpacity>
+    return (
+      <ScrollView testID="ProfileEditScreen" style={FULL}>
+        <TouchableOpacity onPress={goBack}>
+          <Icons size={35} name="keyboard-return" color={color.primary} />
+        </TouchableOpacity>
 
-      <View style={CONTAINER}>
-        <View style={IMAGE_CONTAINER}>
-          <AutoImage
-            style={IMAGE}
-            source={
-              (selectedImageUri && { uri: selectedImageUri }) ||
-              (userImage && { uri: userImage }) ||
-              defaultImage
-            }
+        <View style={CONTAINER}>
+          <View style={IMAGE_CONTAINER}>
+            <AutoImage
+              style={IMAGE}
+              source={
+                (selectedImageUri && { uri: selectedImageUri }) ||
+                (userImage && { uri: userImage }) ||
+                defaultImage
+              }
+            />
+            <TouchableOpacity onPress={onImageSelect}>
+              <Text style={IMAGE_BUTTON}>Selecionar foto</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={FIELD_TITLE}>Novo nome</Text>
+          <TextField
+            value={name}
+            maxLength={20}
+            onChangeText={setName}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              emailTextInput.current.focus()
+            }}
+            blurOnSubmit={false}
           />
-          <TouchableOpacity onPress={onImageSelect}>
-            <Text style={IMAGE_BUTTON}>Selecionar foto</Text>
-          </TouchableOpacity>
+          <Text style={FIELD_TITLE}>Novo e-mail</Text>
+          <TextField
+            value={email}
+            maxLength={35}
+            onChangeText={setEmail}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              emailTextInput.current.focus()
+            }}
+            blurOnSubmit={false}
+            forwardedRef={emailTextInput}
+          />
+          <Text style={FIELD_TITLE}>Nova senha</Text>
+          <TextField
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            returnKeyType="next"
+            forwardedRef={passwordTextInput}
+          />
+          <Text style={FIELD_TITLE}>Confirmar nova senha</Text>
+          <TextField
+            secureTextEntry
+            value={firmPassword}
+            onChangeText={setFirmPassword}
+            returnKeyType="go"
+            forwardedRef={passwordTextInput}
+          />
+
+          <View style={FOOTER_CONTENT}>
+            <Button
+              testID="next-screen-button"
+              style={BUTTON_SAVE}
+              textStyle={BUTTON_TEXT}
+              text="SALVAR ALTERAÇÕES"
+              onPress={saveProfile}
+            />
+            <Button
+              testID="next-screen-button"
+              style={BUTTON_DELETE}
+              textStyle={BUTTON_TEXT}
+              text="EXCLUIR PERFIL"
+              onPress={logout}
+            />
+          </View>
+       
         </View>
-
-        <Text style={FIELD_TITLE}>Novo nome</Text>
-        <TextField
-          value={name}
-          onChangeText={setName}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            emailTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-        />
-        <Text style={FIELD_TITLE}>Novo e-mail</Text>
-        <TextField
-          value={email}
-          onChangeText={setEmail}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            emailTextInput.current.focus()
-          }}
-          blurOnSubmit={false}
-          forwardedRef={emailTextInput}
-        />
-        <Text style={FIELD_TITLE}>Nova senha</Text>
-        <TextField
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          returnKeyType="next"
-          forwardedRef={passwordTextInput}
-        />
-        <Text style={FIELD_TITLE}>Confirmar nova senha</Text>
-        <TextField
-          secureTextEntry
-          value={firmPassword}
-          onChangeText={setFirmPassword}
-          returnKeyType="go"
-          forwardedRef={passwordTextInput}
-        />
-
-        <View style={FOOTER_CONTENT}>
-          <Button
-            testID="next-screen-button"
-            style={BUTTON_SAVE}
-            textStyle={BUTTON_TEXT}
-            text="SALVAR ALTERAÇÕES"
-            onPress={saveProfile}
-          />
-          <Button
-            testID="next-screen-button"
-            style={BUTTON_DELETE}
-            textStyle={BUTTON_TEXT}
-            text="EXCLUIR PERFIL"
-            onPress={logout}
-          />
-        </View>
-      </View>
-    </ScrollView>
-  )
-})
+      </ScrollView>
+    )
+  }
+)

@@ -1,16 +1,24 @@
 import React, { FC, useEffect, useState, useRef } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  ImageStyle,
+  Alert,
+  Picker
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Alert, Picker } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
 
 import { Text, TextField, Button, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
-import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
-
 import { groupTypes, busStop, district, hours, minutes } from '../group_creation/picker-data'
 
 
@@ -134,10 +142,8 @@ const TIME_PICKER_SEPARATOR: TextStyle = {
 
 
 export const GroupEditScreen: FC<StackScreenProps<
-TabNavigatorParamList, "group_edit">> = observer(
+  TabNavigatorParamList, "group_edit">> = observer(({ route, navigation }) => {
 
-  ({ route, navigation }) => {
-    // Pull in one of our MST stores
     const { groupStore } = useStores()
 
     const [id, setId] = useState(0)
@@ -233,24 +239,10 @@ TabNavigatorParamList, "group_edit">> = observer(
             </TouchableOpacity>
           </View>
 
-          <Text style={FIELD_TITLE}>Tipo do grupo</Text>
-          <View style={PICKER_CONTAINER}>
-          <Picker
-            style={PICKER_FIELD}
-            selectedValue={type}
-            onValueChange={changeType}
-          >
-            {
-              groupTypes.map(groupTypes =>
-                <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
-              )
-            }
-          </Picker>
-        </View>
-
           <Text style={FIELD_TITLE}>Nome do grupo</Text>
           <TextField
             value={name}
+            maxLength={15}
             onChangeText={setName}
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -260,9 +252,26 @@ TabNavigatorParamList, "group_edit">> = observer(
             forwardedRef={nameTextInput}
           />
 
+          <Text style={FIELD_TITLE}>Tipo do grupo</Text>
+          <View style={PICKER_CONTAINER}>
+            <Picker
+              style={PICKER_FIELD}
+              selectedValue={type}
+              onValueChange={changeType}
+              itemStyle={TEXT}
+            >
+              {
+                groupTypes.map(groupTypes =>
+                  <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
+                )
+              }
+            </Picker>
+          </View>
+
           <Text style={FIELD_TITLE}>Ponto de encontro</Text>
           <TextField
             value={meeting}
+            maxLength={35}
             onChangeText={setMeeting}
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -279,6 +288,7 @@ TabNavigatorParamList, "group_edit">> = observer(
               style={PICKER_FIELD}
               selectedValue={destination}
               onValueChange={setDestination}
+              itemStyle={TEXT}
             >
               {
                 busStop.map(busStop =>
@@ -291,6 +301,7 @@ TabNavigatorParamList, "group_edit">> = observer(
               style={PICKER_FIELD}
               selectedValue={destination}
               onValueChange={setDestination}
+              itemStyle={TEXT}
             >
               {
                 district.map(district =>
@@ -308,6 +319,7 @@ TabNavigatorParamList, "group_edit">> = observer(
               style={TIME_PICKER}
               selectedValue={hour}
               onValueChange={setHour}
+              itemStyle={TEXT}
             >
               {
                 hours.map(hours =>
@@ -322,6 +334,7 @@ TabNavigatorParamList, "group_edit">> = observer(
               style={TIME_PICKER}
               selectedValue={min}
               onValueChange={setMin}
+              itemStyle={TEXT}
             >
               {
                 minutes.map(minutes =>
@@ -335,6 +348,7 @@ TabNavigatorParamList, "group_edit">> = observer(
           <Text style={FIELD_TITLE}>Outros detalhes</Text>
           <TextField
             value={details}
+            maxLength={35}
             onChangeText={setDetails}
             returnKeyType="go"
             onSubmitEditing={saveGroup}

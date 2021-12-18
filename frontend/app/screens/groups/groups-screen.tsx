@@ -1,13 +1,21 @@
 import React, { FC, useEffect, useState } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  ImageStyle
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Text, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -98,8 +106,9 @@ const ADD_BUTTON: TextStyle = {
   bottom: 0,
 }
 
-export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">> = observer(
-  ({ navigation }) => {
+export const GroupsScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "groups">> = observer(({ navigation }) => {
+    
     const { groupStore } = useStores()
 
     const [groups, setGroups] = useState([])
@@ -118,7 +127,6 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
       return unsubscribe
     }, [navigation])
 
-    // Pull in navigation via hook
     return (
       <View testID="GroupScreen" style={FULL}>
         <Text style={TITLE} preset="header" text="Seus grupos" />
@@ -166,6 +174,7 @@ export const GroupsScreen: FC<StackScreenProps<TabNavigatorParamList, "groups">>
         >
           <Icons size={80} name="add-box" color={color.primary} />
         </TouchableOpacity>
+      
       </View>
     )
   },

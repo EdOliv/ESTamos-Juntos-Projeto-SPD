@@ -1,14 +1,22 @@
 import React, { FC, useRef, useState } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle, 
+  TouchableOpacity, 
+  ScrollView, 
+  Alert 
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Button, Text, TextField } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { saveString } from "../../utils/storage"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -57,9 +65,10 @@ const ENTER_TEXT: TextStyle = {
   letterSpacing: 2,
 }
 
-export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
+
+export const RegisterScreen: FC<StackScreenProps<
+  NavigatorParamList, "register">> = observer(({ navigation }) => {
+
     const { authStore } = useStores()
 
     const [name, setName] = useState("")
@@ -85,7 +94,6 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
       navigation.navigate("login")
     }
 
-    // Pull in navigation via hook
     return (
       <ScrollView testID="RegisterScreen" style={FULL}>
         <TouchableOpacity onPress={goBack}>
@@ -98,6 +106,7 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
           <Text style={FIELD_TITLE}>Nome de usuário</Text>
           <TextField
             value={name}
+            maxLength={20}
             onChangeText={setName}
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -109,6 +118,7 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
           <Text style={FIELD_TITLE}>E-mail</Text>
           <TextField
             value={email}
+            maxLength={35}
             onChangeText={setEmail}
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -148,6 +158,7 @@ export const RegisterScreen: FC<StackScreenProps<NavigatorParamList, "register">
               signUp()
             }}
           />
+        
         </View>
       </ScrollView>
     )

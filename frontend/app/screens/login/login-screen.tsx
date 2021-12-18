@@ -1,5 +1,4 @@
 import React, { FC, useRef, useState } from "react"
-import { observer } from "mobx-react-lite"
 import {
   View,
   ViewStyle,
@@ -9,6 +8,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native"
+import { observer } from "mobx-react-lite"
 import { StackScreenProps } from "@react-navigation/stack"
 
 import { Button, Text, AutoImage as Image, TextField } from "../../components"
@@ -70,8 +70,9 @@ const FOOTER_TEXT: TextStyle = {
   textDecorationLine: "underline",
 }
 
-export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
-  ({ navigation }) => {
+
+export const LoginScreen: FC<StackScreenProps<
+  NavigatorParamList, "login">> = observer(({ navigation }) => {
     
     const { authStore } = useStores()
 
@@ -101,11 +102,12 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
       navigation.navigate("reset_password")
     }
 
-    // Pull in navigation via hook
     return (
       <ScrollView testID="LoginScreen" style={FULL}>
         <View style={CONTAINER}>
+          
           <Image source={require("./logo.png")} style={LOGO} />
+          
           <Text style={FIELD_TITLE}>E-mail</Text>
           <TextField
             value={email}
@@ -116,6 +118,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             }}
             blurOnSubmit={false}
           />
+          
           <Text style={FIELD_TITLE}>Senha</Text>
           <TextField
             secureTextEntry
@@ -125,6 +128,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             onSubmitEditing={login}
             forwardedRef={passwordTextInput}
           />
+          
           <Button
             testID="next-screen-button"
             style={ENTER}
@@ -140,6 +144,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
           <TouchableOpacity onPress={register}>
             <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>
           </TouchableOpacity>
+        
         </View>
       </ScrollView>
     )

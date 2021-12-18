@@ -1,16 +1,23 @@
 import React, { FC, useRef, useState } from "react"
+import {
+  View,
+  ViewStyle,
+  TextStyle, 
+  ScrollView,
+  TouchableOpacity,
+  ImageStyle,
+  Picker
+} from "react-native"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextStyle, ScrollView, TouchableOpacity, ImageStyle, Picker } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 
 import { Text, TextField, Button, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
-import { MaterialIcons as Icons } from "@expo/vector-icons"
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
-
 import { groupTypes, busStop, district, hours, minutes } from '../group_creation/picker-data'
 
 
@@ -85,13 +92,11 @@ const PICKER_FIELD: TextStyle = {
   borderRadius: 10,
   borderWidth: 0,
   backgroundColor: color.bar,
-  color: color.text,
 }
 
 const TIME_PICKER_CONTAINER: TextStyle = {
   flexDirection: 'row',
   alignItems: 'center',
-  color: color.text,
 }
 
 const TIME_PICKER_ITEM: TextStyle = {
@@ -122,13 +127,12 @@ const TIME_PICKER_SEPARATOR: TextStyle = {
 }
 
 
-export const GroupCreationScreen: FC<
-  StackScreenProps<TabNavigatorParamList, "group_creation">
-> = observer(({ navigation }) => {
-  // Pull in one of our MST stores
+export const GroupCreationScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "group_creation">> = observer(({ navigation }) => {
+
   const { groupStore } = useStores()
 
-  const [type, setType] = useState(groupTypes[0]) // "caminhada" or "carona"
+  const [type, setType] = useState(groupTypes[0])
   const [name, setName] = useState("")
   const [meeting, setMeeting] = useState("")
   const [destination, setDestination] = useState(busStop[0])
@@ -178,7 +182,7 @@ export const GroupCreationScreen: FC<
   }
 
   return (
-    <ScrollView testID="NewGroupScreen" style={FULL}>
+    <ScrollView testID="GroupCreationScreen" style={FULL}>
       <TouchableOpacity onPress={goBack}>
         <Icons size={35} name="keyboard-return" color={color.primary} />
       </TouchableOpacity>
@@ -197,24 +201,10 @@ export const GroupCreationScreen: FC<
           </TouchableOpacity>
         </View>
 
-        <Text style={FIELD_TITLE}>Tipo do grupo</Text>
-        <View style={PICKER_CONTAINER}>
-          <Picker
-            style={PICKER_FIELD}
-            selectedValue={type}
-            onValueChange={changeType}
-          >
-            {
-              groupTypes.map(groupTypes =>
-                <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
-              )
-            }
-          </Picker>
-        </View>
-
         <Text style={FIELD_TITLE}>Nome do grupo</Text>
         <TextField
           value={name}
+          maxLength={15}
           onChangeText={setName}
           returnKeyType="next"
           onSubmitEditing={() => {
@@ -224,9 +214,26 @@ export const GroupCreationScreen: FC<
           forwardedRef={nameTextInput}
         />
 
+        <Text style={FIELD_TITLE}>Tipo do grupo</Text>
+        <View style={PICKER_CONTAINER}>
+          <Picker
+            style={PICKER_FIELD}
+            selectedValue={type}
+            onValueChange={changeType}
+            itemStyle={TEXT}
+          >
+            {
+              groupTypes.map(groupTypes =>
+                <Picker.Item key={groupTypes} label={groupTypes} value={groupTypes}/>
+              )
+            }
+          </Picker>
+        </View>
+
         <Text style={FIELD_TITLE}>Ponto de encontro</Text>
         <TextField
           value={meeting}
+          maxLength={35}
           onChangeText={setMeeting}
           returnKeyType="next"
           onSubmitEditing={() => {
@@ -243,6 +250,7 @@ export const GroupCreationScreen: FC<
               style={PICKER_FIELD}
               selectedValue={destination}
               onValueChange={setDestination}
+              itemStyle={TEXT}
             >
               {
                 busStop.map(busStop =>
@@ -255,6 +263,7 @@ export const GroupCreationScreen: FC<
               style={PICKER_FIELD}
               selectedValue={destination}
               onValueChange={setDestination}
+              itemStyle={TEXT}
             >
               {
                 district.map(district =>
@@ -272,6 +281,7 @@ export const GroupCreationScreen: FC<
               style={TIME_PICKER}
               selectedValue={hour}
               onValueChange={setHour}
+              itemStyle={TEXT}
             >
               {
                 hours.map(hours =>
@@ -286,6 +296,7 @@ export const GroupCreationScreen: FC<
               style={TIME_PICKER}
               selectedValue={min}
               onValueChange={setMin}
+              itemStyle={TEXT}
             >
               {
                 minutes.map(minutes =>
@@ -299,6 +310,7 @@ export const GroupCreationScreen: FC<
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <TextField
           value={details}
+          maxLength={35}
           onChangeText={setDetails}
           returnKeyType="go"
           onSubmitEditing={createGroup}
