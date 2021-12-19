@@ -6,6 +6,7 @@ from routes.auth import auth
 from routes.refresh import refresh
 from routes.user import user
 from routes.group import group
+from routes.chat import chat
 
 from extensions.jwt import jwt
 from extensions.mail import mail
@@ -63,6 +64,7 @@ app.register_blueprint(auth)
 app.register_blueprint(refresh)
 app.register_blueprint(user)
 app.register_blueprint(group)
+app.register_blueprint(chat)
 
 
 # Invoked callback to set response code in all responses
