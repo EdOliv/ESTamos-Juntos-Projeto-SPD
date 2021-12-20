@@ -17,6 +17,7 @@ import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
 import { Group } from "../../models/group/group"
+import { TwilioService } from "../../services/chat"
 
 
 const FULL: ViewStyle = {
@@ -127,6 +128,7 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const { authStore, userStore, groupStore } = useStores()
 
+  const userId = userStore.userData ? userStore.userData.id : 0;
   const username = userStore.userData ? userStore.userData.username : "--";
 
   const [group, setGroup] = useState<Group | null>({
@@ -183,6 +185,17 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const joinGroup = async () => {
     const res = await groupStore.joinGroup(route.params.groupId)
+    
+    const groupId = route.params.groupId.toString();
+    TwilioService.getInstance()
+      .getChatClient()
+      .then((client) =>
+        client
+          .getChannelByUniqueName(groupId)
+          .then((channel) => (channel.status !== 'joined' ? channel.join() : channel))
+      )
+      .then(() => console.log({ message: 'You have joined.' }))
+      .catch((err) => console.log({ message: err.message, type: 'danger' }))
     if (res.kind === "ok") {
       Alert.alert("Você faz parte do grupo!")
       navigation.navigate("groups")
@@ -191,8 +204,25 @@ export const GroupDetailsScreen: FC<StackScreenProps<
     }
   }
 
-  const leaveGroup = () => {
-    navigation.navigate("groups")
+  const leaveGroup = async () => {
+    const res = await groupStore.leaveGroup(route.params.groupId, userId)
+    
+    const groupId = route.params.groupId.toString();
+    TwilioService.getInstance()
+      .getChatClient()
+      .then((client) =>
+        client
+          .getChannelByUniqueName(groupId)
+          .then((channel) => (channel.status === 'joined' ? channel.leave() : channel))
+      )
+      .then(() => console.log({ message: 'You have left.' }))
+      .catch((err) => console.log({ message: err.message, type: 'danger' }))
+    if (res.kind === "ok") {
+      Alert.alert("Você saiu do grupo!")
+      navigation.navigate("groups")
+    } else {
+      Alert.alert("Erro ao sair do grupo!")
+    }
   }
 
   const isUserAdmin = (id: number) => {

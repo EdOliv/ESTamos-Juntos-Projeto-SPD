@@ -74,7 +74,7 @@ const FOOTER_TEXT: TextStyle = {
 export const LoginScreen: FC<StackScreenProps<
   NavigatorParamList, "login">> = observer(({ navigation }) => {
     
-    const { authStore } = useStores()
+    const { authStore, userStore } = useStores()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -84,6 +84,7 @@ export const LoginScreen: FC<StackScreenProps<
     const login = async () => {
       console.log("LOGIN")
       await authStore.login(email, password)
+      await userStore.getAccountData();
 
       if (authStore.isAuthenticated) {
         await saveString("@ESTamosJuntos:accessToken", authStore.accessToken)

@@ -23,7 +23,7 @@ export class GroupApi {
     destinationName: string,
     meetingTime: string,
     description: string,
-    image: any|null
+    image: any | null,
   ): Promise<CreateGroupResult> {
     try {
       // make the api call
@@ -34,7 +34,7 @@ export class GroupApi {
         destination_name: destinationName,
         meeting_time: meetingTime,
         description: description,
-        image
+        image,
       })
 
       // the typical ways to die when calling an api
@@ -70,7 +70,7 @@ export class GroupApi {
     destinationName: string,
     meetingTime: string,
     description: string,
-    image: any|null
+    image: any | null,
   ): Promise<CreateGroupResult> {
     try {
       // make the api call
@@ -82,7 +82,7 @@ export class GroupApi {
         destination_name: destinationName,
         meeting_time: meetingTime,
         description: description,
-        image
+        image,
       })
 
       // the typical ways to die when calling an api
@@ -242,6 +242,38 @@ export class GroupApi {
     try {
       // make the api call
       const response: ApiResponse<any> = await this.api.apisauce.post(`group/${id}/join_group`)
+
+      // the typical ways to die when calling an api
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        if (problem) return problem
+      }
+
+      const group = {
+        id: response.data.group.id,
+        name: response.data.group.name,
+        groupType: response.data.group.group_type,
+        startName: response.data.group.start_name,
+        destinationName: response.data.group.destination_name,
+        meetingTime: response.data.group.meeting_time,
+        description: response.data.group.description,
+        pictureUrl: response.data.group.picture_url,
+        usersCount: response.data.group.users_count,
+      }
+
+      return { kind: "ok", group }
+    } catch (e) {
+      __DEV__ && console.tron.log(e.message)
+      return { kind: "bad-data" }
+    }
+  }
+
+  async leaveGroup(groupId: number, userId: number): Promise<JoinGroupResult> {
+    try {
+      // make the api call
+      const response: ApiResponse<any> = await this.api.apisauce.post(
+        `group/${groupId}/remove_from_group/${userId}`,
+      )
 
       // the typical ways to die when calling an api
       if (!response.ok) {

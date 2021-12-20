@@ -136,6 +136,18 @@ export const GroupStoreModel = types
         return null
       }
     },
+    leaveGroup: async (groupId: number, userId: number) => {
+      const groupApi = new GroupApi(self.environment.api)
+      const result = await groupApi.leaveGroup(groupId, userId)
+
+      if (result.kind === "ok") {
+        // self.saveGroups(result.group)
+        return result
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return null
+      }
+    },
   }))
 
 type GroupStoreType = Instance<typeof GroupStoreModel>

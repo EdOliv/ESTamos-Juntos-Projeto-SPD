@@ -186,7 +186,7 @@ export const GroupCreationScreen: FC<StackScreenProps<
       .then((client) =>
         client
           .getChannelByUniqueName(groupId)
-          .then((channel) => (channel.channelState.status !== 'joined' ? channel.join() : channel))
+          .then((channel) => (channel.status !== 'joined' ? channel.join() : channel))
           .catch(() =>
             client.createChannel({ uniqueName: groupId, friendlyName: res.name }).then((channel) => channel.join()),
           ),
