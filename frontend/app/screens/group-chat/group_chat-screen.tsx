@@ -81,7 +81,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
     const platformConf =
       Platform.OS === "ios"
         ? {
-            minInputToolbarHeight: 10,
+            minInputToolbarHeight: 40,
           }
         : {}
 
