@@ -168,7 +168,7 @@ def update():
 
       return jsonify(message="An error occurred while updating group"), 400
 
-    image = group_data['image']
+    image = group_data.get('image', None)
     if image:
       with open('temp_image.png', "wb") as file:
         file.write(base64.decodebytes(group_data['image'].encode()))
