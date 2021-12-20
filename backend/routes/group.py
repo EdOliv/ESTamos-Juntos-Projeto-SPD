@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
     jwt_required, get_jwt_identity
 )
-from marshmallow import ValidationError
+from marshmallow import ValidationError, EXCLUDE
 
 from models.database import commit_transaction
 from models.group import Group
@@ -100,7 +100,7 @@ def create():
   try:
     group_data = request.get_json()
     new_group = group_schema.load(
-        group_data, many=False)  # type: Group
+        group_data, many=False, unknown=EXCLUDE)  # type: Group
 
     user = User.find_by_id(get_jwt_identity())
     new_group.created_by = user
@@ -130,6 +130,10 @@ def create():
 
     new_group = group_schema.dump(new_group, many=False)
     return jsonify(group=new_group), 200
+  except ValidationError as e:
+    key = list(e.messages.keys())[0]
+    message = f"'{key}': {e.messages[key][0]}"
+    return jsonify(message=message), 400
   except Exception as e:
     print(e)
     return jsonify(message="An error occurred"), 400
