@@ -4,7 +4,7 @@ import { Platform, TouchableOpacity, View, ViewStyle } from "react-native"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
-import { color } from "../../theme"
+import { color, spacing } from "../../theme"
 import { GiftedChat } from "react-native-gifted-chat"
 import { TwilioService } from "../../services/chat"
 import { TabNavigatorParamList } from "../../navigators"
@@ -16,6 +16,10 @@ const ROOT: ViewStyle = {
   backgroundColor: color.background,
   flexDirection: "column",
   flexGrow: 1,
+}
+
+const BUTTON_BACK: ViewStyle = {
+  marginHorizontal: spacing[4],
 }
 
 const MESSAGE_CONTAINER: ViewStyle = {
@@ -38,14 +42,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
       chatClientChannel.current = channel
       chatClientChannel.current.on("messageAdded", (message) => {
         const newMessage = TwilioService.getInstance().parseMessage(message)
-        const { giftedId } = message.attributes as any
-        if (giftedId) {
-          setMessages((prevMessages) =>
-            prevMessages.map((m) => (m._id === giftedId ? newMessage : m)),
-          )
-        } else {
-          setMessages((prevMessages) => [newMessage, ...prevMessages])
-        }
+        setMessages((prevMessages) => [newMessage, ...prevMessages])
       })
       return chatClientChannel.current
     }, [])
@@ -70,7 +67,6 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
         giftedId: newMessages[0]._id,
         avatar: route.params.avatar,
       }
-      setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages))
       chatClientChannel.current?.sendMessage(newMessages[0].text, attributes)
     }, [])
 
@@ -87,7 +83,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
 
     return (
       <View style={ROOT}>
-        <TouchableOpacity onPress={goBack}>
+        <TouchableOpacity style={BUTTON_BACK} onPress={goBack}>
           <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
         <GiftedChat

@@ -56,6 +56,7 @@ export class TwilioService {
         name: message.author,
         avatar: attributes.avatar,
       },
+      giftedId: attributes.giftedId,
       received: true,
     };
   }
