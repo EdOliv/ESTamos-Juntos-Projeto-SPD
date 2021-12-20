@@ -179,19 +179,20 @@ export const GroupCreationScreen: FC<StackScreenProps<
     const image = selectedImage?.base64
     const res = await groupStore.createGroup(name, type, meeting, destination, hour+":"+min, details, image)
     
+    const groupId = res.id.toString();
+
     TwilioService.getInstance()
       .getChatClient()
       .then((client) =>
         client
-          .getChannelByUniqueName(res.id)
+          .getChannelByUniqueName(groupId)
           .then((channel) => (channel.channelState.status !== 'joined' ? channel.join() : channel))
           .catch(() =>
-            client.createChannel({ uniqueName: res.id, friendlyName: res.name }).then((channel) => channel.join()),
+            client.createChannel({ uniqueName: groupId, friendlyName: res.name }).then((channel) => channel.join()),
           ),
       )
       .then(() => console.log({ message: 'You have joined.' }))
       .catch((err) => console.log({ message: err.message, type: 'danger' }))
-      .finally(() => console.log("finally"));
 
     console.log(res)
     navigation.navigate("groups")

@@ -25,7 +25,7 @@ export const GroupStoreModel = types
       destinationName: string,
       meetingTime: string,
       description: string,
-      image: any|null
+      image: any | null,
     ) => {
       const groupApi = new GroupApi(self.environment.api)
       const result = await groupApi.createGroup(
@@ -35,15 +35,15 @@ export const GroupStoreModel = types
         destinationName,
         meetingTime,
         description,
-        image
+        image,
       )
-
+      
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.group;
+        return result.group
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     updateGroup: async (
@@ -54,7 +54,7 @@ export const GroupStoreModel = types
       destinationName: string,
       meetingTime: string,
       description: string,
-      image: any|null
+      image: any | null,
     ) => {
       const groupApi = new GroupApi(self.environment.api)
       const result = await groupApi.updateGroup(
@@ -65,15 +65,15 @@ export const GroupStoreModel = types
         destinationName,
         meetingTime,
         description,
-        image
+        image,
       )
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.group;
+        return result.group
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     getGroupData: async (id: number) => {
@@ -82,10 +82,10 @@ export const GroupStoreModel = types
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.group;
+        return result.group
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     searchGroups: async (name: string) => {
@@ -94,10 +94,10 @@ export const GroupStoreModel = types
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.groups;
+        return result.groups
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     getUserGroups: async () => {
@@ -106,10 +106,10 @@ export const GroupStoreModel = types
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.groups;
+        return result.groups
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     getGroupUsers: async (id: number) => {
@@ -118,10 +118,10 @@ export const GroupStoreModel = types
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result.usersGroup;
+        return result.usersGroup
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
     joinGroup: async (id: number) => {
@@ -130,10 +130,10 @@ export const GroupStoreModel = types
 
       if (result.kind === "ok") {
         // self.saveGroups(result.group)
-        return result;
+        return result
       } else {
         __DEV__ && console.tron.log(result.kind)
-        return null;
+        return null
       }
     },
   }))

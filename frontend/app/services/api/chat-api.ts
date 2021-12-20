@@ -17,9 +17,7 @@ export class ChatApi {
   ): Promise<GetChatTokenResult> {
     try {
       // make the api call
-      const response: ApiResponse<any> = await this.api.apisauce.get("chat/token",  {params: {
-        username,
-      }})
+      const response: ApiResponse<any> = await this.api.apisauce.get(`chat/token/${username}`)
 
       // the typical ways to die when calling an api
       if (!response.ok) {
@@ -27,7 +25,7 @@ export class ChatApi {
         if (problem) return problem
       }
 
-      return { kind: "ok", token: response.data.jwt }
+      return { kind: "ok", token: response.data.token }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }

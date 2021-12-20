@@ -23,10 +23,12 @@ const FULL: ViewStyle = {
 }
 
 const CONTAINER: ViewStyle = {
-  flex: 1,
   backgroundColor: color.background,
   paddingHorizontal: spacing[4],
-  flexDirection: "row",
+}
+
+const SCROLL_VIEW: ViewStyle = {
+  width: "100%"
 }
 
 const TEXT: TextStyle = {
@@ -121,11 +123,12 @@ export const GroupsScreen: FC<StackScreenProps<
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", async () => {
         
+        console.log("LOADING CHAT TOKEN")
+        
         chatStore.getChatToken(username)
-        .then((token) => TwilioService.getInstance().getChatClient(token))
+        .then((result) => TwilioService.getInstance().getChatClient(result.token))
         .then(() => TwilioService.getInstance().addTokenListener(chatStore.getChatToken))
         .catch((err) => console.log({ message: err.message, type: 'danger' }))
-        .finally(() => console.log("finally"));
 
         console.log("LOADING GROUPS")
         const loadGroups = async () => {
@@ -142,7 +145,7 @@ export const GroupsScreen: FC<StackScreenProps<
         <Text style={TITLE} preset="header" text="Seus grupos" />
 
         {groups && groups.length > 0 ? (
-          <ScrollView style={CONTAINER} horizontal={false} contentContainerStyle={FULL}>
+          <ScrollView style={CONTAINER} horizontal={false} contentContainerStyle={SCROLL_VIEW}>
             {groups.map((group) => (
               <TouchableOpacity
                 style={GROUP_ITEM}
@@ -159,7 +162,7 @@ export const GroupsScreen: FC<StackScreenProps<
                 />
                 <View style={FULL}>
                   <Text style={GROUP_NAME}>{group.name}</Text>
-                  <Text style={GROUP_DESTINATION}>{group.destinationName}</Text>
+                  <Text style={GROUP_DESTINATION} numberOfLines={1}>{group.destinationName}</Text>
                   <View style={GROUP_FOOTER}>
                     <Text style={GROUP_FOOTER_TEXT}>{group.meetingTime.substring(0, 5)}</Text>
                     <Text style={GROUP_FOOTER_TEXT}>{group.usersCount} pessoas</Text>

@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { TouchableOpacity, ViewStyle } from "react-native"
 import { Screen } from "../../components"
+import { MaterialIcons as Icons } from "@expo/vector-icons"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
@@ -11,8 +12,8 @@ import { TabNavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 
 const ROOT: ViewStyle = {
-  backgroundColor: color.palette.black,
   flex: 1,
+  backgroundColor: color.background,
 }
 
 const MESSAGE_CONTAINER: ViewStyle = {
@@ -21,7 +22,7 @@ const MESSAGE_CONTAINER: ViewStyle = {
 }
 
 export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_chat">> = observer(
-  ({ route }) => {
+  ({ route, navigation }) => {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
 
@@ -49,27 +50,37 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
     }, [])
 
     useEffect(() => {
+      console.log("HELLO")
       TwilioService.getInstance()
         .getChatClient()
-        .then((client) => client.getChannelBySid(channelId))
+        .then((client) => client.getChannelBySid(channelId.toString()))
         .then((channel) => setChannelEvents(channel))
         .then((currentChannel) => currentChannel.getMessages())
         .then((paginator) => {
           chatMessagesPaginator.current = paginator
           const newMessages = TwilioService.getInstance().parseMessages(paginator.items)
+          console.log("HELLO 2",newMessages)
           setMessages(newMessages)
         })
         .catch((err) => console.log({ message: err.message, type: "danger" }))
     }, [channelId, setChannelEvents])
 
     const onSend = useCallback((newMessages = []) => {
+      console.log("SEND")
       const attributes = { giftedId: newMessages[0]._id }
       setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages))
       chatClientChannel.current?.sendMessage(newMessages[0].text, attributes)
     }, [])
 
+    const goBack = () => {
+      navigation.navigate("group_details", { groupId: route.params.channelId })
+    }  
+
     return (
-      <Screen style={ROOT} preset="scroll">
+      <Screen style={ROOT} preset="fixed">
+      <TouchableOpacity onPress={goBack}>
+        <Icons size={35} name="keyboard-return" color={color.primary} />
+      </TouchableOpacity>
         <GiftedChat
           messagesContainerStyle={MESSAGE_CONTAINER}
           messages={messages}
