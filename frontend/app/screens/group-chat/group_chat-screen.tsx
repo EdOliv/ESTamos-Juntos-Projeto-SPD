@@ -81,8 +81,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
     const platformConf =
       Platform.OS === "ios"
         ? {
-            minInputToolbarHeight: 40,
-            bottomOffset: 0,
+            minInputToolbarHeight: 10,
           }
         : {}
 
@@ -97,7 +96,6 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
           renderAvatarOnTop
           onSend={(messages) => onSend(messages)}
           user={{ _id: identity }}
-          forceGetKeyboardHeight
           {...platformConf}
         />
       </View>
