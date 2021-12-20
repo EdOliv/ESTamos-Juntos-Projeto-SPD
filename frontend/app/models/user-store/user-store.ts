@@ -48,6 +48,8 @@ export const UserStoreModel = types
         image
       )
 
+      console.log(result)
+
       if (result.kind === "ok") {
         return result.userData;
       } else {

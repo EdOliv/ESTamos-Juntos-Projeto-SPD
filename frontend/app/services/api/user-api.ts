@@ -33,6 +33,8 @@ export class UserApi {
         if (problem) return problem
       }
 
+      console.log(response.data)
+
       const userData = {
         id: response.data.user_data.id,
         name: response.data.user_data.name,
@@ -44,6 +46,7 @@ export class UserApi {
 
       return { kind: "ok", userData }
     } catch (e) {
+      console.log(e)
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }
     }

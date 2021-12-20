@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Platform, TouchableOpacity, ViewStyle } from "react-native"
-import { Screen } from "../../components"
+import { Platform, TouchableOpacity, View, ViewStyle } from "react-native"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -52,6 +51,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
     }, [])
 
     useEffect(() => {
+      console.log(identity)
       TwilioService.getInstance()
         .getChatClient()
         .then((client) => client.getChannelBySid(channelId.toString()))
@@ -69,7 +69,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
       console.log("SENDING MESSAGE")
       const attributes = {
         giftedId: newMessages[0]._id,
-        avatar: "https://sm.ign.com/ign_br/screenshot/default/darth-vader_5yvm.jpg",
+        avatar: route.params.avatar,
       }
       setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages))
       chatClientChannel.current?.sendMessage(newMessages[0].text, attributes)
@@ -88,7 +88,7 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
         : {}
 
     return (
-      <Screen style={ROOT} unsafe preset="fixed">
+      <View style={ROOT}>
         <TouchableOpacity onPress={goBack}>
           <Icons size={35} name="keyboard-return" color={color.primary} />
         </TouchableOpacity>
@@ -98,9 +98,10 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
           renderAvatarOnTop
           onSend={(messages) => onSend(messages)}
           user={{ _id: identity }}
+          forceGetKeyboardHeight
           {...platformConf}
         />
-      </Screen>
+      </View>
     )
   },
 )

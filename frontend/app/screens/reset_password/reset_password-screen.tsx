@@ -124,7 +124,7 @@ export const ResetPasswordScreen: FC<StackScreenProps<
           />
 
           <Button
-            testID="next-screen-button"
+            testID="send-message-button"
             style={ENTER}
             textStyle={ENTER_TEXT}
             text="ENVIAR"

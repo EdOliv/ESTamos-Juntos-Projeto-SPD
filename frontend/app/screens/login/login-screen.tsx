@@ -17,7 +17,6 @@ import { NavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
 import { saveString } from "../../utils/storage"
 
-
 const FULL: ViewStyle = {
   flex: 1,
   paddingTop: spacing[8],
@@ -70,10 +69,8 @@ const FOOTER_TEXT: TextStyle = {
   textDecorationLine: "underline",
 }
 
-
-export const LoginScreen: FC<StackScreenProps<
-  NavigatorParamList, "login">> = observer(({ navigation }) => {
-    
+export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
+  ({ navigation }) => {
     const { authStore, userStore } = useStores()
 
     const [email, setEmail] = useState("")
@@ -84,11 +81,12 @@ export const LoginScreen: FC<StackScreenProps<
     const login = async () => {
       console.log("LOGIN")
       await authStore.login(email, password)
-      await userStore.getAccountData();
 
       if (authStore.isAuthenticated) {
         await saveString("@ESTamosJuntos:accessToken", authStore.accessToken)
         await saveString("@ESTamosJuntos:refreshToken", authStore.refreshToken)
+
+        await userStore.getAccountData()
         navigation.navigate("tabs")
       } else {
         Alert.alert("Error", "Login failed")
@@ -106,9 +104,8 @@ export const LoginScreen: FC<StackScreenProps<
     return (
       <ScrollView testID="LoginScreen" style={FULL}>
         <View style={CONTAINER}>
-          
           <Image source={require("./logo.png")} style={LOGO} />
-          
+
           <Text style={FIELD_TITLE}>E-mail</Text>
           <TextField
             value={email}
@@ -119,7 +116,7 @@ export const LoginScreen: FC<StackScreenProps<
             }}
             blurOnSubmit={false}
           />
-          
+
           <Text style={FIELD_TITLE}>Senha</Text>
           <TextField
             secureTextEntry
@@ -129,9 +126,9 @@ export const LoginScreen: FC<StackScreenProps<
             onSubmitEditing={login}
             forwardedRef={passwordTextInput}
           />
-          
+
           <Button
-            testID="next-screen-button"
+            testID="login-button"
             style={ENTER}
             textStyle={ENTER_TEXT}
             text="ENTRAR"
@@ -145,7 +142,6 @@ export const LoginScreen: FC<StackScreenProps<
           <TouchableOpacity onPress={register}>
             <Text style={FOOTER_TEXT}>É novo por aqui? Registre-se agora!</Text>
           </TouchableOpacity>
-        
         </View>
       </ScrollView>
     )

@@ -212,14 +212,14 @@ export const ProfileEditScreen: FC<BottomTabNavigationProp<
 
           <View style={FOOTER_CONTENT}>
             <Button
-              testID="next-screen-button"
+              testID="save-profile-button"
               style={BUTTON_SAVE}
               textStyle={BUTTON_TEXT}
               text="SALVAR ALTERAÇÕES"
               onPress={saveProfile}
             />
             <Button
-              testID="next-screen-button"
+              testID="logout-button"
               style={BUTTON_DELETE}
               textStyle={BUTTON_TEXT}
               text="EXCLUIR PERFIL"

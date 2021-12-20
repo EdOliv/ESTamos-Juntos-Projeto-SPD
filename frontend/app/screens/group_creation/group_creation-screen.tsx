@@ -336,7 +336,7 @@ export const GroupCreationScreen: FC<StackScreenProps<
         />
 
         <Button
-          testID="next-screen-button"
+          testID="create-group-screen-button"
           style={ENTER}
           textStyle={ENTER_TEXT}
           text="CRIAR GRUPO"

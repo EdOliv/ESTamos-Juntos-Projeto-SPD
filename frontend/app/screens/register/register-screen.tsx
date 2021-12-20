@@ -150,7 +150,7 @@ export const RegisterScreen: FC<StackScreenProps<
           />
 
           <Button
-            testID="next-screen-button"
+            testID="sign-up-button"
             style={ENTER}
             textStyle={ENTER_TEXT}
             text="REGISTRAR"

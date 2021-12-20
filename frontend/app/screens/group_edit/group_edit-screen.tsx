@@ -358,14 +358,14 @@ export const GroupEditScreen: FC<StackScreenProps<
 
           <View style={FOOTER_CONTENT}>
               <Button
-                testID="next-screen-button"
+                testID="save-group-button"
                 style={BUTTON_EDIT}
                 textStyle={BUTTON_TEXT}
                 text="SALVAR ALTERAÇÕES"
                 onPress={saveGroup}
               />
               <Button
-                testID="next-screen-button"
+                testID="delete-group-button"
                 style={BUTTON_DELETE}
                 textStyle={BUTTON_TEXT}
                 text="EXCLUIR GRUPO"

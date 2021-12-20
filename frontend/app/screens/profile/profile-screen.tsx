@@ -129,7 +129,7 @@ export const ProfileScreen: FC<BottomTabNavigationProp<
 
           <View style={FOOTER_CONTENT}>
             <Button
-              testID="next-screen-button"
+              testID="edit-profile-screen-button"
               style={BUTTON_SAVE}
               textStyle={BUTTON_TEXT}
               text="EDITAR PERFIL"

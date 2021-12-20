@@ -19,7 +19,6 @@ import { useStores } from "../../models"
 import { Group } from "../../models/group/group"
 import { TwilioService } from "../../services/chat"
 
-
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
@@ -122,14 +121,14 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-
-export const GroupDetailsScreen: FC<StackScreenProps<
-  TabNavigatorParamList, "group_details">> = observer(({ route, navigation }) => {
-
+export const GroupDetailsScreen: FC<
+  StackScreenProps<TabNavigatorParamList, "group_details">
+> = observer(({ route, navigation }) => {
   const { authStore, userStore, groupStore } = useStores()
 
-  const userId = userStore.userData ? userStore.userData.id : 0;
-  const username = userStore.userData ? userStore.userData.username : "--";
+  const userId = userStore.userData ? userStore.userData.id : 0
+  const username = userStore.userData ? userStore.userData.username : "--"
+  const profilePictureUrl = userStore.userData ? userStore.userData.profilePictureUrl : "--"
 
   const [group, setGroup] = useState<Group | null>({
     id: 0,
@@ -164,7 +163,7 @@ export const GroupDetailsScreen: FC<StackScreenProps<
   }
 
   const openChat = (groupId: number) => {
-    navigation.navigate("group_chat", { channelId: groupId, identity: username })
+    navigation.navigate("group_chat", { channelId: groupId, identity: username, avatar: profilePictureUrl })
   }
 
   const ownProfile = () => {
@@ -185,17 +184,17 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const joinGroup = async () => {
     const res = await groupStore.joinGroup(route.params.groupId)
-    
-    const groupId = route.params.groupId.toString();
+
+    const groupId = route.params.groupId.toString()
     TwilioService.getInstance()
       .getChatClient()
       .then((client) =>
         client
           .getChannelByUniqueName(groupId)
-          .then((channel) => (channel.status !== 'joined' ? channel.join() : channel))
+          .then((channel) => (channel.status !== "joined" ? channel.join() : channel)),
       )
-      .then(() => console.log({ message: 'You have joined.' }))
-      .catch((err) => console.log({ message: err.message, type: 'danger' }))
+      .then(() => console.log({ message: "You have joined." }))
+      .catch((err) => console.log({ message: err.message, type: "danger" }))
     if (res.kind === "ok") {
       Alert.alert("Você faz parte do grupo!")
       navigation.navigate("groups")
@@ -206,17 +205,17 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const leaveGroup = async () => {
     const res = await groupStore.leaveGroup(route.params.groupId, userId)
-    
-    const groupId = route.params.groupId.toString();
+
+    const groupId = route.params.groupId.toString()
     TwilioService.getInstance()
       .getChatClient()
       .then((client) =>
         client
           .getChannelByUniqueName(groupId)
-          .then((channel) => (channel.status === 'joined' ? channel.leave() : channel))
+          .then((channel) => (channel.status === "joined" ? channel.leave() : channel)),
       )
-      .then(() => console.log({ message: 'You have left.' }))
-      .catch((err) => console.log({ message: err.message, type: 'danger' }))
+      .then(() => console.log({ message: "You have left." }))
+      .catch((err) => console.log({ message: err.message, type: "danger" }))
     if (res.kind === "ok") {
       Alert.alert("Você saiu do grupo!")
       navigation.navigate("groups")
@@ -227,6 +226,10 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const isUserAdmin = (id: number) => {
     return people.some((userGroup) => userGroup.user.id === id && userGroup.isAdmin)
+  }
+
+  const isUserInGroup = (id: number) => {
+    return people.some((userGroup) => userGroup.user.id === id)
   }
 
   return (
@@ -258,14 +261,16 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
-        
-        <Button
-          testID="next-screen-button"
-          style={BUTTON_EDIT}
-          textStyle={BUTTON_TEXT}
-          text="MENSAGENS"
-          onPress={() => openChat(group.id)}
-        />
+
+        {isUserInGroup(authStore.userId) && (
+          <Button
+            testID="open-chat-button"
+            style={BUTTON_EDIT}
+            textStyle={BUTTON_TEXT}
+            text="MENSAGENS"
+            onPress={() => openChat(group.id)}
+          />
+        )}
 
         <Text style={FIELD_TITLE}>Pessoas</Text>
 
@@ -302,40 +307,43 @@ export const GroupDetailsScreen: FC<StackScreenProps<
         <View style={FOOTER_CONTENT}>
           {isUserAdmin(authStore.userId) ? (
             <Button
-              testID="next-screen-button"
+              testID="edit-group-button"
               style={BUTTON_EDIT}
               textStyle={BUTTON_TEXT}
               text="EDITAR GRUPO"
               onPress={editGroup}
             />
           ) : (
-            <Button
-              testID="next-screen-button"
-              style={BUTTON_EDIT}
-              textStyle={BUTTON_TEXT}
-              text="ENTRAR NO GRUPO"
-              onPress={joinGroup}
-            />
+            !isUserInGroup(authStore.userId) && (
+              <Button
+                testID="join-group-button"
+                style={BUTTON_EDIT}
+                textStyle={BUTTON_TEXT}
+                text="ENTRAR NO GRUPO"
+                onPress={joinGroup}
+              />
+            )
           )}
           {isUserAdmin(authStore.userId) ? (
             <Button
-              testID="next-screen-button"
+              testID="delete-group-button"
               style={BUTTON_DELETE}
               textStyle={BUTTON_TEXT}
               text="EXCLUIR GRUPO"
               onPress={deleteGroup}
             />
           ) : (
-            <Button
-              testID="next-screen-button"
-              style={BUTTON_DELETE}
-              textStyle={BUTTON_TEXT}
-              text="SAIR DO GRUPO"
-              onPress={leaveGroup}
-            />
+            isUserInGroup(authStore.userId) && (
+              <Button
+                testID="leave-group-button"
+                style={BUTTON_DELETE}
+                textStyle={BUTTON_TEXT}
+                text="SAIR DO GRUPO"
+                onPress={leaveGroup}
+              />
+            )
           )}
         </View>
-        
       </View>
     </ScrollView>
   )

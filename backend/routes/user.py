@@ -51,7 +51,7 @@ def update():
 
       return jsonify(message="An error occurred while updating user"), 400
 
-    image = user_data['image']
+    image = user_data.get("image")
     if image:
       with open('temp_image.png', "wb") as file:
         file.write(base64.decodebytes(user_data['image'].encode()))
