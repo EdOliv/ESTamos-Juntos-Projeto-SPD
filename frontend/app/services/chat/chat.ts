@@ -46,7 +46,6 @@ export class TwilioService {
   }
 
   parseMessage(message: Message) {
-    console.log(message.author, message.attributes)
     const attributes = message.attributes as any;
     return {
       _id: message.sid,

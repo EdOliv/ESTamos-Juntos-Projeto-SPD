@@ -51,7 +51,6 @@ export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_
     }, [])
 
     useEffect(() => {
-      console.log(identity)
       TwilioService.getInstance()
         .getChatClient()
         .then((client) => client.getChannelBySid(channelId.toString()))

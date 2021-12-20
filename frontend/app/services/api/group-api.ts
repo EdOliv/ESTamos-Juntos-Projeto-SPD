@@ -185,7 +185,6 @@ export class GroupApi {
       }
 
       const groups = response.data.groups.map((group) => {
-        console.log(group)
         return {
           id: group.id,
           name: group.name,
