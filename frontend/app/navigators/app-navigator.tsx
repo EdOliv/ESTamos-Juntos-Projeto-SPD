@@ -10,7 +10,8 @@ import {
   GroupDetailsScreen,
   GroupEditScreen,
   ProfileEditScreen,
-  ProfileOthersScreen
+  ProfileOthersScreen,
+  GroupChatScreen
 } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { TabNavigator } from "./tab-navigator"
@@ -26,6 +27,7 @@ export type NavigatorParamList = {
   profile_edit: undefined
   group_creation: undefined
   group_details: undefined
+  group_chat: undefined
   group_edit: undefined
   profile_others: undefined
 }
@@ -50,6 +52,7 @@ const AppStack = () => {
       <Stack.Screen name="group_details" component={GroupDetailsScreen} />
       <Stack.Screen name="group_edit" component={GroupEditScreen} />
       <Stack.Screen name="profile_others" component={ProfileOthersScreen} />
+      <Stack.Screen name="group_chat" component={GroupChatScreen} />
     </Stack.Navigator>
   )
 }

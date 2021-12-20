@@ -15,6 +15,7 @@ import { Text, AutoImage } from "../../components"
 import { color, spacing, typography } from "../../theme"
 import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
+import { TwilioService } from "../../services/chat"
 
 
 const FULL: ViewStyle = {
@@ -109,7 +110,9 @@ const ADD_BUTTON: TextStyle = {
 export const GroupsScreen: FC<StackScreenProps<
   TabNavigatorParamList, "groups">> = observer(({ navigation }) => {
     
-    const { groupStore } = useStores()
+    const { userStore, groupStore, chatStore } = useStores()
+
+    const username = userStore.userData ? userStore.userData.username : "--";
 
     const [groups, setGroups] = useState([])
 
@@ -117,6 +120,13 @@ export const GroupsScreen: FC<StackScreenProps<
 
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", async () => {
+        
+        chatStore.getChatToken(username)
+        .then((token) => TwilioService.getInstance().getChatClient(token))
+        .then(() => TwilioService.getInstance().addTokenListener(chatStore.getChatToken))
+        .catch((err) => console.log({ message: err.message, type: 'danger' }))
+        .finally(() => console.log("finally"));
+
         console.log("LOADING GROUPS")
         const loadGroups = async () => {
           const newGroups = await groupStore.getUserGroups()

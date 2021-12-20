@@ -32,6 +32,10 @@ export type TabNavigatorParamList = {
   group_details: {
     groupId: number
   }
+  group_chat: {
+    channelId: number, 
+    identity: string
+  }
   group_edit: {
     groupId: number
   }

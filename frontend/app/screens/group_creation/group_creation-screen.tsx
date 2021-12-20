@@ -19,6 +19,7 @@ import { TabNavigatorParamList } from "../../navigators"
 import { useStores } from "../../models"
 import { openImagePickerAsync } from "../../utils/image-picker"
 import { groupTypes, busStop, district, hours, minutes } from '../group_creation/picker-data'
+import { TwilioService } from "../../services/chat"
 
 
 const FULL: ViewStyle = {
@@ -177,6 +178,21 @@ export const GroupCreationScreen: FC<StackScreenProps<
 
     const image = selectedImage?.base64
     const res = await groupStore.createGroup(name, type, meeting, destination, hour+":"+min, details, image)
+    
+    TwilioService.getInstance()
+      .getChatClient()
+      .then((client) =>
+        client
+          .getChannelByUniqueName(res.id)
+          .then((channel) => (channel.channelState.status !== 'joined' ? channel.join() : channel))
+          .catch(() =>
+            client.createChannel({ uniqueName: res.id, friendlyName: res.name }).then((channel) => channel.join()),
+          ),
+      )
+      .then(() => console.log({ message: 'You have joined.' }))
+      .catch((err) => console.log({ message: err.message, type: 'danger' }))
+      .finally(() => console.log("finally"));
+
     console.log(res)
     navigation.navigate("groups")
   }

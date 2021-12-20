@@ -125,7 +125,9 @@ const FOOTER_CONTENT: ViewStyle = {
 export const GroupDetailsScreen: FC<StackScreenProps<
   TabNavigatorParamList, "group_details">> = observer(({ route, navigation }) => {
 
-  const { authStore, groupStore } = useStores()
+  const { authStore, userStore, groupStore } = useStores()
+
+  const username = userStore.userData ? userStore.userData.username : "--";
 
   const [group, setGroup] = useState<Group | null>({
     id: 0,
@@ -157,6 +159,10 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
   const goBack = () => {
     navigation.goBack()
+  }
+
+  const openChat = (groupId: number) => {
+    navigation.navigate("group_chat", { channelId: groupId, identity: username })
   }
 
   const ownProfile = () => {
@@ -222,6 +228,14 @@ export const GroupDetailsScreen: FC<StackScreenProps<
 
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
+        
+        <Button
+          testID="next-screen-button"
+          style={BUTTON_EDIT}
+          textStyle={BUTTON_TEXT}
+          text="MENSAGENS"
+          onPress={() => openChat(group.id)}
+        />
 
         <Text style={FIELD_TITLE}>Pessoas</Text>
 
