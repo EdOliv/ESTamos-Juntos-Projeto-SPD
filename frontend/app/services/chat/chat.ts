@@ -1,8 +1,8 @@
-import { Client } from "twilio-chat"
+import { Client, Message } from "twilio-chat"
 
 export class TwilioService {
   static serviceInstance
-  static chatClient
+  static chatClient: Client
 
   // create a single service instance
   static getInstance() : TwilioService {
@@ -45,7 +45,9 @@ export class TwilioService {
     return messages.map(this.parseMessage).reverse();
   }
 
-  parseMessage(message) {
+  parseMessage(message: Message) {
+    console.log(message.attributes)
+    const attributes = message.attributes as any;
     return {
       _id: message.sid,
       text: message.body,
@@ -53,6 +55,7 @@ export class TwilioService {
       user: {
         _id: message.author,
         name: message.author,
+        avatar: attributes.avatar,
       },
       received: true,
     };
