@@ -19,6 +19,7 @@ import { useStores } from "../../models"
 import { Group } from "../../models/group/group"
 import { TwilioService } from "../../services/chat"
 
+
 const FULL: ViewStyle = {
   flex: 1,
   backgroundColor: color.background,
@@ -121,9 +122,23 @@ const FOOTER_CONTENT: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const GroupDetailsScreen: FC<
-  StackScreenProps<TabNavigatorParamList, "group_details">
-> = observer(({ route, navigation }) => {
+const BUTTON_CHAT: ViewStyle = {
+  marginTop: spacing[5],
+  backgroundColor: color.button,
+  width: 110,
+  height: 25,
+}
+
+const PEOPLE_TITLE: ViewStyle = {
+  flexDirection: 'row',
+  alignContent: 'center',
+  justifyContent: 'space-between',
+}
+
+
+export const GroupDetailsScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "group_details">> = observer(({ route, navigation }) => {
+  
   const { authStore, userStore, groupStore } = useStores()
 
   const userId = userStore.userData ? userStore.userData.id : 0
@@ -262,17 +277,21 @@ export const GroupDetailsScreen: FC<
         <Text style={FIELD_TITLE}>Outros detalhes</Text>
         <Text style={FIELD_TEXT}>{group.description || "--"}</Text>
 
+
+        <View style={PEOPLE_TITLE}>
+        <Text style={FIELD_TITLE}>Pessoas</Text>
+
         {isUserInGroup(authStore.userId) && (
           <Button
             testID="open-chat-button"
-            style={BUTTON_EDIT}
+            style={BUTTON_CHAT}
             textStyle={BUTTON_TEXT}
-            text="MENSAGENS"
+            text="Ver chat"
             onPress={() => openChat(group.id)}
           />
         )}
 
-        <Text style={FIELD_TITLE}>Pessoas</Text>
+      </View>
 
         {people.map((userGroup) => (
           <View key={userGroup.user.id} style={USER_ITEM}>

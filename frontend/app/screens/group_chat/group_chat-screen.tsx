@@ -1,15 +1,15 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react"
-import { observer } from "mobx-react-lite"
 import { Platform, TouchableOpacity, View, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
 import { MaterialIcons as Icons } from "@expo/vector-icons"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
-import { color, spacing } from "../../theme"
 import { GiftedChat } from "react-native-gifted-chat"
-import { TwilioService } from "../../services/chat"
-import { TabNavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import { Channel } from "twilio-chat"
+
+import { color, spacing } from "../../theme"
+import { TwilioService } from "../../services/chat"
+import { TabNavigatorParamList } from "../../navigators"
+
 
 const ROOT: ViewStyle = {
   flex: 1,
@@ -26,13 +26,10 @@ const MESSAGE_CONTAINER: ViewStyle = {
   backgroundColor: color.background,
 }
 
-export const GroupChatScreen: FC<StackScreenProps<TabNavigatorParamList, "group_chat">> = observer(
-  ({ route, navigation }) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+export const GroupChatScreen: FC<StackScreenProps<
+  TabNavigatorParamList, "group_chat">> = observer(({ route, navigation }) => {
+
     const { channelId, identity } = route.params
     const [messages, setMessages] = useState([])
     const chatClientChannel = useRef<Channel>()
