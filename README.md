@@ -6,7 +6,7 @@ Este é um **projeto de desenvolvimento** realizado na disciplina de Sistemas Pa
 - Yasmin Maria Muniz de Oliveira
 
 ### Estrutura Principal do Repositório
-- **frontend (inicializado com o boilerplat [Ignite](https://github.com/infinitered/ignite))**
+- **frontend (inicializado com o boilerplate [Ignite](https://github.com/infinitered/ignite))**
 ```
 ├── app
 │   ├── components
@@ -53,4 +53,4 @@ Este é um **projeto de desenvolvimento** realizado na disciplina de Sistemas Pa
 └── equirements.txt
 ```
 
-
+### Inicializando o Expo App
