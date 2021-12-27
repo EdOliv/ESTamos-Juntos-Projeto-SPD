@@ -61,3 +61,4 @@ user@notebook:~/ESTamos-Juntos-Projeto-SPD/frontend$ npm install
 ```console
 user@notebook:~/ESTamos-Juntos-Projeto-SPD/frontend$ expo start
 ```
+Para emular o app em um smartphone, baixar o [Expo Go](https://expo.dev/client) nele para ler o QR Code gerado na inicialização.
