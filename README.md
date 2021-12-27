@@ -50,7 +50,7 @@ Este é um **projeto de desenvolvimento** realizado na disciplina de Sistemas Pa
 │   ├── user_schema.py 
 ├── Procfile
 ├── app.py
-└── equirements.txt
+└── requirements.txt
 ```
 
 ### Instalando e inicializando o Expo App
